@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<lab name="SOC-Detection-Perimeter-Lab" id="11e3a144-5f7e-4089-a9b3-87572a2a5c30" version="1" scripttimeout="300" lock="0">
+<lab name="SOC-Detection-Perimeter-Lab" id="4057d455-a64b-4699-8ea7-cfa84058e653" version="1" scripttimeout="300" lock="0">
   <topology>
     <nodes>
       <node id="1" name="OPNsense-FW" type="qemu" template="opnsense" image="opnsense-24.7" console="vnc" cpu="2" cpulimit="1" ram="2048" ethernet="4" uuid="39d9003e-f54b-425f-ba21-fc257915c2bb" qemu_options="-machine type=pc,accel=kvm -nographic -usbdevice tablet -boot order=dc -serial mon:stdio" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Firewall.png" config="0" left="540" top="160">
@@ -41,97 +41,97 @@
   <objects>
     <textobjects>
       <textobject id="1" name="Header-Banner-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyMHB4OyBsZWZ0OiA4MHB4OyB3aWR0aDogMTA2MHB4OyBoZWlnaHQ6IDYwcHg7IHotaW5kZXg6IC0xOyI+PHN2ZyB3aWR0aD0iMTA2MCIgaGVpZ2h0PSI2MCI+PHJlY3Qgd2lkdGg9IjEwNjAiIGhlaWdodD0iNjAiIHN0cm9rZT0iIzAwNTZiMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjE1KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape1" class="customShape context-menu" data-path="1" style="display:inline;z-index:-1;position:absolute;left:80px;top:20px;" width="1060px" height="60px"&gt;&lt;svg width="1060" height="60"&gt;&lt;rect width="1060" height="60" fill="rgba(13, 110, 253, 0.15)" stroke-width="2" stroke="#0056b3"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="2" name="Main-Header-Title" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyOHB4OyBsZWZ0OiAxMDBweDsgei1pbmRleDogMjA7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxNnB4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICMwZDZlZmQ7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+U09DIERFVEVDVElPTiAmYW1wOyBQRVJJTUVURVIgRU5HSU5FRVJJTkcgTEFCIHwgTElWRSBUSFJFQVQgU0lNVUxBVElPTjwvcD48L2Rpdj4=</data>
+        <data>&lt;div id="customText2" class="customShape customText context-menu" data-path="2" style="display:inline;position:absolute;left:100px;top:28px;cursor:move;z-index:20;"&gt;&lt;p align="center" style="vertical-align:top;color:#0d6efd;background-color:transparent;font-size:16px;font-weight: bold;"&gt;SOC DETECTION AND PERIMETER ENGINEERING LAB | LIVE THREAT SIMULATION&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="3" name="Main-Header-Subtitle" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1MnB4OyBsZWZ0OiAxMDBweDsgei1pbmRleDogMjA7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LXdlaWdodDogbm9ybWFsOyBjb2xvcjogIzZjNzU3ZDsgYmFja2dyb3VuZC1jb2xvcjogdHJhbnNwYXJlbnQ7Ij5TdXJpY2F0YSA4LjAuNyBOSURTIOKAoiBPUE5zZW5zZSAyNC43IE5HV0Yg4oCiIENpc2NvIDcyMDAgKyBJT0wgTDIgQ29yZSDigKIgS2FsaSBSZWQgVGVhbSDigKIgRXZlQm94IFNJRU08L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText3" class="customShape customText context-menu" data-path="3" style="display:inline;position:absolute;left:100px;top:52px;cursor:move;z-index:20;"&gt;&lt;p align="center" style="vertical-align:top;color:#6c757d;background-color:transparent;font-size:12px;font-weight: normal;"&gt;Suricata 8.0.7 NIDS • OPNsense 24.7 NGWF • Cisco 7200 + IOL L2 Core • Kali Red Team • EveBox SIEM&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="4" name="Zone1-Attack-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiA5NXB4OyBsZWZ0OiA4MHB4OyB3aWR0aDogMzYwcHg7IGhlaWdodDogMjMwcHg7IHotaW5kZXg6IC0xMDsiPjxzdmcgd2lkdGg9IjM2MCIgaGVpZ2h0PSIyMzAiPjxyZWN0IHdpZHRoPSIzNjAiIGhlaWdodD0iMjMwIiBzdHJva2U9IiNkYzM1NDUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMCwwIiBmaWxsPSJyZ2JhKDIyMCwgNTMsIDY5LCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape4" class="customShape context-menu" data-path="4" style="display:inline;z-index:-10;position:absolute;left:80px;top:95px;" width="360px" height="230px"&gt;&lt;svg width="360" height="230"&gt;&lt;rect width="360" height="230" fill="rgba(220, 53, 69, 0.08)" stroke-width="2" stroke="#dc3545"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="5" name="Kali-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogMTI1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2RjMzU0NSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjIwLCA1MywgNjksIDAuMjApIi8+PC9zdmc+PC9kaXY+</data>
+        <data>&lt;div id="customShape5" class="customShape context-menu" data-path="5" style="display:inline;z-index:-5;position:absolute;left:125px;top:135px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#dc3545" stroke-width="2" fill="rgba(220, 53, 69, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="6" name="Zone1-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAxMDJweDsgbGVmdDogOTVweDsgei1pbmRleDogMTU7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxM3B4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICNmZmZmZmY7IGJhY2tncm91bmQtY29sb3I6ICNkYzM1NDU7Ij5FWFRFUk5BTCAvIEFUVEFDSyBaT05FIChXQU46IDE3Mi4zMS4yNTUuMC8yNCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText6" class="customShape customText context-menu" data-path="6" style="display:inline;position:absolute;left:95px;top:102px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#dc3545;font-size:13px;font-weight: bold;"&gt;EXTERNAL / ATTACK ZONE (WAN: 172.31.255.0/24)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="7" name="Kali-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogMTI1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZGMzNTQ1OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkthbGkgUmVkVGVhbSAoMTcyLjMxLjI1NS4xMDApPC9wPjwvZGl2Pg==</data>
+        <data>&lt;div id="customText7" class="customShape customText context-menu" data-path="7" style="display:inline;position:absolute;left:125px;top:240px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#dc3545;background-color:transparent;font-size:11px;font-weight: bold;"&gt;Kali RedTeam (172.31.255.100)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="8" name="WAN-Cloud-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogMzA1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgY29sb3I6ICM2Yzc1N2Q7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+SW50ZXJuZXQgQ2xvdWQgKHBuZXQxIE5BVCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText8" class="customShape customText context-menu" data-path="8" style="display:inline;position:absolute;left:305px;top:240px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#6c757d;background-color:transparent;font-size:11px;font-weight: normal;"&gt;Internet Cloud (pnet1 NAT)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="9" name="Zone2-Perimeter-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiA5NXB4OyBsZWZ0OiA0NjBweDsgd2lkdGg6IDY4MHB4OyBoZWlnaHQ6IDIzMHB4OyB6LWluZGV4OiAtMTA7Ij48c3ZnIHdpZHRoPSI2ODAiIGhlaWdodD0iMjMwIj48cmVjdCB3aWR0aD0iNjgwIiBoZWlnaHQ9IjIzMCIgc3Ryb2tlPSIjMGQ2ZWZkIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjAsMCIgZmlsbD0icmdiYSgxMywgMTEwLCAyNTMsIDAuMDgpIi8+PC9zdmc+PC9kaXY+</data>
+        <data>&lt;div id="customShape9" class="customShape context-menu" data-path="9" style="display:inline;z-index:-10;position:absolute;left:460px;top:95px;" width="680px" height="230px"&gt;&lt;svg width="680" height="230"&gt;&lt;rect width="680" height="230" fill="rgba(13, 110, 253, 0.08)" stroke-width="2" stroke="#0d6efd"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="10" name="OPNsense-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogNTE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzBkNmVmZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape10" class="customShape context-menu" data-path="10" style="display:inline;z-index:-5;position:absolute;left:515px;top:135px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#0d6efd" stroke-width="2" fill="rgba(13, 110, 253, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="11" name="Cisco7200-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogNzU1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzBkNmVmZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape11" class="customShape context-menu" data-path="11" style="display:inline;z-index:-5;position:absolute;left:755px;top:135px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#0d6efd" stroke-width="2" fill="rgba(13, 110, 253, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="12" name="Zone2-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAxMDJweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjMGQ2ZWZkOyI+UEVSSU1FVEVSIERFRkVOU0UgJmFtcDsgUk9VVElORyAoT1BOc2Vuc2UgTkdXRiArIENpc2NvIDcyMDApPC9wPjwvZGl2Pg==</data>
+        <data>&lt;div id="customText12" class="customShape customText context-menu" data-path="12" style="display:inline;position:absolute;left:475px;top:102px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#0d6efd;font-size:13px;font-weight: bold;"&gt;PERIMETER DEFENSE AND ROUTING (OPNsense NGWF + Cisco 7200)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="13" name="OPNsense-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogNTA1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMGQ2ZWZkOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPk9QTnNlbnNlIDI0LjcgTkdXRiAoMTAuMTAuMTAuMSk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText13" class="customShape customText context-menu" data-path="13" style="display:inline;position:absolute;left:505px;top:240px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#0d6efd;background-color:transparent;font-size:11px;font-weight: bold;"&gt;OPNsense 24.7 NGWF (10.10.10.1)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="14" name="Cisco7200-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogNzQ1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMGQ2ZWZkOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNpc2NvIDcyMDAgUm91dGVyIChPU1BGL0JHUCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText14" class="customShape customText context-menu" data-path="14" style="display:inline;position:absolute;left:745px;top:240px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#0d6efd;background-color:transparent;font-size:11px;font-weight: bold;"&gt;Cisco 7200 Router (OSPF/BGP)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="15" name="Local-Cloud-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogOTY1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgY29sb3I6ICM2Yzc1N2Q7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+TG9jYWwgTEFOIEJyaWRnZSAocG5ldDApPC9wPjwvZGl2Pg==</data>
+        <data>&lt;div id="customText15" class="customShape customText context-menu" data-path="15" style="display:inline;position:absolute;left:965px;top:240px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#6c757d;background-color:transparent;font-size:11px;font-weight: normal;"&gt;Local LAN Bridge (pnet0)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="16" name="Zone3-Core-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiAzNDBweDsgbGVmdDogNDYwcHg7IHdpZHRoOiA2ODBweDsgaGVpZ2h0OiAxNDBweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iNjgwIiBoZWlnaHQ9IjE0MCI+PHJlY3Qgd2lkdGg9IjY4MCIgaGVpZ2h0PSIxNDAiIHN0cm9rZT0iIzZmNDJjMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTExLCA2NiwgMTkzLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape16" class="customShape context-menu" data-path="16" style="display:inline;z-index:-10;position:absolute;left:460px;top:340px;" width="680px" height="140px"&gt;&lt;svg width="680" height="140"&gt;&lt;rect width="680" height="140" fill="rgba(111, 66, 193, 0.08)" stroke-width="2" stroke="#6f42c1"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="17" name="Switch-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiAzNTVweDsgbGVmdDogNzE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzZmNDJjMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTExLCA2NiwgMTkzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape17" class="customShape context-menu" data-path="17" style="display:inline;z-index:-5;position:absolute;left:715px;top:355px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#6f42c1" stroke-width="2" fill="rgba(111, 66, 193, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="18" name="Zone3-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiAzNDdweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjNmY0MmMxOyI+Q09SRSBTV0lUQ0hJTkcgJmFtcDsgU1BBTiBURUxFTUVUUlkgKFZMQU4gMTAvMjAvMzAgKyBTUEFOKTwvcD48L2Rpdj4=</data>
+        <data>&lt;div id="customText18" class="customShape customText context-menu" data-path="18" style="display:inline;position:absolute;left:475px;top:347px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#6f42c1;font-size:13px;font-weight: bold;"&gt;CORE SWITCHING AND SPAN TELEMETRY (VLAN 10/20/30 + SPAN)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="19" name="Switch-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA0NTVweDsgbGVmdDogNzEwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjNmY0MmMxOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNpc2NvIElPTCBMMiBTd2l0Y2ggKFNQQU4gTW9uaXRvcik8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText19" class="customShape customText context-menu" data-path="19" style="display:inline;position:absolute;left:710px;top:455px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#6f42c1;background-color:transparent;font-size:11px;font-weight: bold;"&gt;Cisco IOL L2 Switch (SPAN Monitor)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="20" name="Zone4-LAN-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogODBweDsgd2lkdGg6IDM2MHB4OyBoZWlnaHQ6IDE5NXB4OyB6LWluZGV4OiAtMTA7Ij48c3ZnIHdpZHRoPSIzNjAiIGhlaWdodD0iMTk1Ij48cmVjdCB3aWR0aD0iMzYwIiBoZWlnaHQ9IjE5NSIgc3Ryb2tlPSIjMTk4NzU0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjAsMCIgZmlsbD0icmdiYSgyNSwgMTM1LCA4NCwgMC4wOCkiLz48L3N2Zz48L2Rpdj4=</data>
+        <data>&lt;div id="customShape20" class="customShape context-menu" data-path="20" style="display:inline;z-index:-10;position:absolute;left:80px;top:495px;" width="360px" height="195px"&gt;&lt;svg width="360" height="195"&gt;&lt;rect width="360" height="195" fill="rgba(25, 135, 84, 0.08)" stroke-width="2" stroke="#198754"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="21" name="Corp-PC-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogMjc1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzE5ODc1NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUsIDEzNSwgODQsIDAuMjApIi8+PC9zdmc+PC9kaXY+</data>
+        <data>&lt;div id="customShape21" class="customShape context-menu" data-path="21" style="display:inline;z-index:-5;position:absolute;left:275px;top:545px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#198754" stroke-width="2" fill="rgba(25, 135, 84, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="22" name="Zone4-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogOTVweDsgei1pbmRleDogMTU7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxM3B4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICNmZmZmZmY7IGJhY2tncm91bmQtY29sb3I6ICMxOTg3NTQ7Ij5DT1JQT1JBVEUgTEFOIChWTEFOIDEwOiAxMC4xMC4xMC4wLzI0KTwvcD48L2Rpdj4=</data>
+        <data>&lt;div id="customText22" class="customShape customText context-menu" data-path="22" style="display:inline;position:absolute;left:95px;top:502px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#198754;font-size:13px;font-weight: bold;"&gt;CORPORATE LAN (VLAN 10: 10.10.10.0/24)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="23" name="Corp-PC-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogMjcwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMTk4NzU0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNvcnAtQ2xpZW50LVBDICgxMC4xMC4xMC41MCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText23" class="customShape customText context-menu" data-path="23" style="display:inline;position:absolute;left:270px;top:645px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#198754;background-color:transparent;font-size:11px;font-weight: bold;"&gt;Corp-Client-PC (10.10.10.50)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="24" name="Zone5-DMZ-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogNDYwcHg7IHdpZHRoOiAzMjVweDsgaGVpZ2h0OiAxOTVweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iMzI1IiBoZWlnaHQ9IjE5NSI+PHJlY3Qgd2lkdGg9IjMyNSIgaGVpZ2h0PSIxOTUiIHN0cm9rZT0iI2ZkN2UxNCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUzLCAxMjYsIDIwLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape24" class="customShape context-menu" data-path="24" style="display:inline;z-index:-10;position:absolute;left:460px;top:495px;" width="325px" height="195px"&gt;&lt;svg width="325" height="195"&gt;&lt;rect width="325" height="195" fill="rgba(253, 126, 20, 0.08)" stroke-width="2" stroke="#fd7e14"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="25" name="DMZ-Web-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogNjE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2ZkN2UxNCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUzLCAxMjYsIDIwLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape25" class="customShape context-menu" data-path="25" style="display:inline;z-index:-5;position:absolute;left:615px;top:545px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#fd7e14" stroke-width="2" fill="rgba(253, 126, 20, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="26" name="Zone5-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjZmQ3ZTE0OyI+RE1aIFdFQiBTRVJWSUNFUyAoVkxBTiAyMDogMTAuMTAuMjAuMC8yNCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText26" class="customShape customText context-menu" data-path="26" style="display:inline;position:absolute;left:475px;top:502px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#fd7e14;font-size:13px;font-weight: bold;"&gt;DMZ WEB SERVICES (VLAN 20: 10.10.20.0/24)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="27" name="DMZ-Web-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogNjEwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmQ3ZTE0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkRNWi1XZWItU2VydmVyICgxMC4xMC4yMC41MCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText27" class="customShape customText context-menu" data-path="27" style="display:inline;position:absolute;left:610px;top:645px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#fd7e14;background-color:transparent;font-size:11px;font-weight: bold;"&gt;DMZ-Web-Server (10.10.20.50)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="28" name="Zone6-OT-Card" type="square">
-        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogODA1cHg7IHdpZHRoOiAzMzVweDsgaGVpZ2h0OiAxOTVweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iMzM1IiBoZWlnaHQ9IjE5NSI+PHJlY3Qgd2lkdGg9IjMzNSIgaGVpZ2h0PSIxOTUiIHN0cm9rZT0iI2Q2MzM4NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjE0LCA1MSwgMTMyLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape28" class="customShape context-menu" data-path="28" style="display:inline;z-index:-10;position:absolute;left:805px;top:495px;" width="335px" height="195px"&gt;&lt;svg width="335" height="195"&gt;&lt;rect width="335" height="195" fill="rgba(214, 51, 132, 0.08)" stroke-width="2" stroke="#d63384"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="29" name="OT-PLC-Sphere-Highlight" type="circle">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogOTQ1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2Q2MzM4NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjE0LCA1MSwgMTMyLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+        <data>&lt;div id="customShape29" class="customShape context-menu" data-path="29" style="display:inline;z-index:-5;position:absolute;left:945px;top:545px;" width="110px" height="110px"&gt;&lt;svg width="110" height="110"&gt;&lt;ellipse cx="55" cy="55" rx="54" ry="54" stroke="#d63384" stroke-width="2" fill="rgba(214, 51, 132, 0.20)"/&gt;Sorry, your browser does not support inline SVG.&lt;/svg&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="30" name="Zone6-Header-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogODIwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjZDYzMzg0OyI+Q1JJVElDQUwgT1QgLyBJQ1MgKFZMQU4gMzA6IDEwLjEwLjMwLjAvMjQpPC9wPjwvZGl2Pg==</data>
+        <data>&lt;div id="customText30" class="customShape customText context-menu" data-path="30" style="display:inline;position:absolute;left:820px;top:502px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#ffffff;background-color:#d63384;font-size:13px;font-weight: bold;"&gt;CRITICAL OT / ICS (VLAN 30: 10.10.30.0/24)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
       <textobject id="31" name="OT-PLC-Node-Label" type="text">
-        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogOTQwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZDYzMzg0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPk9ULVBMQy1Ob2RlICgxMC4xMC4zMC41MCk8L3A+PC9kaXY+</data>
+        <data>&lt;div id="customText31" class="customShape customText context-menu" data-path="31" style="display:inline;position:absolute;left:940px;top:645px;cursor:move;z-index:15;"&gt;&lt;p align="center" style="vertical-align:top;color:#d63384;background-color:transparent;font-size:11px;font-weight: bold;"&gt;OT-PLC-Node (10.10.30.50)&lt;/p&gt;&lt;/div&gt;</data>
       </textobject>
     </textobjects>
     <configs>
