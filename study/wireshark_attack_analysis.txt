@@ -1,0 +1,84 @@
+================================================================================
+           WIRESHARK ATTACK ANALYSIS & PACKET TRIAGE STUDY NOTES
+================================================================================
+
+1. WIRESHARK FILTERING MECHANICS
+--------------------------------------------------------------------------------
+- Display Filters: Applied in the GUI during or after packet capture.
+  * Green bar: Valid syntax.
+  * Red bar: Syntax error.
+- Logical Operators:
+  * AND: && or and (e.g. ip.src == 172.31.255.100 && http)
+  * OR:  || or or  (e.g. tcp.port == 80 || tcp.port == 443)
+  * NOT: ! or not  (e.g. !tcp.port == 22)
+  * Membership: in (e.g. tcp.dstport in {80 443 8080})
+  * String match: contains or matches (regex)
+
+2. ATTACK DETECTION FILTER CHEAT SHEET
+--------------------------------------------------------------------------------
+A. RECONNAISSANCE & PORT SCANS
+- Stealth TCP SYN Scan:
+  tcp.flags.syn == 1 && tcp.flags.ack == 0
+- Null Scan (No flags set):
+  tcp.flags == 0x000
+- FIN Scan:
+  tcp.flags == 0x001
+- Xmas Scan (FIN, PSH, and URG flags set):
+  tcp.flags == 0x029
+- Port Scan RST Responses (Closed Ports on Target):
+  tcp.flags.reset == 1 && ip.src == 172.31.255.1
+- ICMP Sweep / Host Discovery:
+  icmp.type == 8 || icmp.type == 0
+
+B. WEB APPLICATION ATTACKS (LAYER 7 DPI)
+- SQL Injection (UNION / SELECT / OR 1=1):
+  http.request.uri contains "UNION" || http.request.uri contains "SELECT" || http.request.uri contains "OR"
+- Automated Scanner Probes (sqlmap / Nikto):
+  http.user_agent contains "sqlmap" || http.user_agent contains "Nikto"
+- Shellshock Command Injection (CVE-2014-6271):
+  http.user_agent contains "() {" || http.request.uri contains "() {"
+- Cross-Site Scripting (XSS Injected Tags):
+  http.request.uri contains "<script>" || http.request.uri contains "alert("
+- Directory Traversal / LFI:
+  http.request.uri contains "../" || http.request.uri contains "/etc/passwd"
+- Web Shell / Malicious Uploads:
+  http.request.method == "POST" && http contains "multipart/form-data"
+
+C. BRUTE-FORCE & AUTHENTICATION ATTACKS
+- SSH Brute-Force Bursts:
+  tcp.port == 22 && tcp.flags.syn == 1 && ip.src == 172.31.255.100
+- HTTP 401/403 Unauthorized Spikes:
+  http.response.code == 401 || http.response.code == 403
+
+D. INDUSTRIAL CONTROL & OT EXPLOITS
+- Modbus TCP Write Coil / Force Multiple:
+  modbus && (modbus.func_code == 5 || modbus.func_code == 15)
+- Unauthorized Siemens S7comm Access:
+  s7comm
+
+3. STEP-BY-STEP PACKET INVESTIGATION WORKFLOW
+--------------------------------------------------------------------------------
+1. Isolate the Attacker:
+   Apply filter: ip.addr == <ATTACKER_IP>
+2. Identify Targeted Services:
+   Go to: Statistics -> Conversations -> IPv4 / TCP tabs to view high-volume port hits.
+3. Reconstruct Application Sessions (Follow TCP Stream):
+   Right-click suspicious packet -> Follow -> TCP Stream (or HTTP Stream).
+   * Red text: Client request sent to server.
+   * Blue text: Server response returned to client.
+4. Deep Packet Inspection (DPI) in Packet Details Pane:
+   * Expand Ethernet II (Inspect Source MAC for spoofing).
+   * Expand Internet Protocol Version 4 (Inspect TTL, DF flag, IP IDs).
+   * Expand Transmission Control Protocol (Inspect Seq/Ack, Flags, Window size).
+   * Expand Application Layer (Inspect HTTP URI, Headers, Decoded payload).
+5. Extract Exported Objects / Files:
+   Go to: File -> Export Objects -> HTTP -> Select file to save carving artifacts.
+
+4. AUTOMATED PACKET ANALYSIS VIA TSHARK (CLI)
+--------------------------------------------------------------------------------
+- Extract Top Source IPs and Destination Ports:
+  tshark -r capture.pcap -T fields -e ip.src -e tcp.dstport | sort | uniq -c | sort -nr
+- Extract All HTTP Request URIs:
+  tshark -r capture.pcap -Y "http.request" -T fields -e ip.src -e http.request.method -e http.request.uri
+- Find SQL Injection Signatures:
+  tshark -r capture.pcap -Y 'http.request.uri contains "UNION"' -T fields -e frame.number -e ip.src -e http.request.uri

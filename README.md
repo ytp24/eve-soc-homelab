@@ -109,6 +109,7 @@ Direct, plain-text reference notes covering foundational concepts:
 - [`study/suricata_ids_detection.txt`](study/suricata_ids_detection.txt) - Multi-threading architecture, AF_PACKET, ET Open rule anatomy, `eve.json` structure.
 - [`study/soc_telemetry_siem.txt`](study/soc_telemetry_siem.txt) - SOC Analyst Tier 1/2 triage lifecycle, EveBox alert triage, false positive tuning.
 - [`study/adversary_attack_techniques.txt`](study/adversary_attack_techniques.txt) - MITRE ATT&CK mapping for Nmap, Hydra, SQLi, and C2.
+- [`study/wireshark_attack_analysis.txt`](study/wireshark_attack_analysis.txt) - Wireshark display filters for detecting SYN scans, SQLi, Shellshock, brute-force, and tshark CLI analysis.
 
 ---
 
