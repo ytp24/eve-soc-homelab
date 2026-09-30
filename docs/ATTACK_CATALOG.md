@@ -77,13 +77,21 @@ flowchart TD
 #### Scenario 2.1: SQL Injection (SQLi)
 - **Objective:** Exploit vulnerable web application inputs to dump backend database contents.
 - **MITRE ATT&CK:** [T1190: Exploit Public-Facing Application](https://attack.mitre.org/techniques/T1190/)
-- **Adversary Command (Kali):**
+- **Adversary Execution (Kali):**
   ```bash
-  curl -s "http://172.31.255.1/?id=1%20UNION%20SELECT%20username,password%20FROM%20users--"
+  curl -s -A "sqlmap/1.4.7" "http://172.31.255.1/?id=1%20UNION%20SELECT%20username,password%20FROM%20users--"
   ```
+
+![Kali Linux Attack Execution](images/kali-linux-web-sql-attack.png)
+
 - **Detection & Telemetry:**
   - **Suricata Alert:** `SOC ALERT: Web SQL Injection Union Select Pattern Detected` (ET 2000002)
   - **EveBox Category:** `Web Application Attack` (Severity 1).
+
+![Suricata Live Attack Logs](images/suricata-attack-logs.png)
+
+#### Live Event Investigation in EveBox SIEM:
+![EveBox Web SQL Injection Alert Deep Dive](images/evebox-alert-web-sql-injection.png)
 
 #### Scenario 2.2: Shellshock Remote Code Execution (CVE-2014-6271)
 - **Objective:** Exploit environment variable parsing in Bash to execute arbitrary system commands.
@@ -111,6 +119,10 @@ flowchart TD
 ---
 
 ### Phase 3: Layer 2 Switch Attacks (Intra-VLAN / Core Switch)
+
+The Cisco Core Switch segments internal enterprise domains and provides SPAN port mirroring out to the Suricata inspection engine:
+
+![Cisco Switch VLAN and Interface Configuration](images/cisco-switch-vlan-and-interfaces-config.png)
 
 #### Scenario 3.1: CAM Table Overflow (MAC Flooding)
 - **Objective:** Exhaust the switch Content Addressable Memory (CAM) table to force it into hub/broadcast mode.
@@ -153,9 +165,17 @@ flowchart TD
 
 ---
 
-### Phase 5: OT / ICS Industrial Control Attacks
+### Phase 5: Deep Packet Inspection & Wire Verification
 
-#### Scenario 5.1: Unauthorized Modbus TCP Command Injection
+Deep packet inspection verifies TCP handshakes and payload integrity at the packet layer:
+
+![Wireshark TCP Handshake Analysis](images/wireshark-tcp-handshake-analysis.png)
+
+---
+
+### Phase 6: OT / ICS Industrial Control Attacks
+
+#### Scenario 6.1: Unauthorized Modbus TCP Command Injection
 - **Objective:** Send unauthorized read/write function codes to PLC (`10.10.30.100:502`).
 - **MITRE ATT&CK for ICS:** [T0855: Unauthorized Command Message](https://attack.mitre.org/techniques/T0855/)
 - **Adversary Command:**
@@ -181,13 +201,15 @@ The lab includes a unified adversary execution script:
 telnet 192.168.1.35 32772
 
 # Execute full automated simulation
-chmod +x /home/yahya/Documents/eve-ng/configs/kali-redteam-attack.sh
+chmod +x /home/kali/kali-redteam-attack.sh
 ./kali-redteam-attack.sh 172.31.255.1
 ```
 
 ---
 
 ## 4. SOC Analyst Triage Checklist (EveBox UI)
+
+![EveBox SIEM Dashboard Overview](images/evebox-siem-dashboard.png)
 
 1. Open EveBox SIEM: `http://192.168.1.35:5636`
 2. Filter by Source IP: `src_ip: 172.31.255.100`

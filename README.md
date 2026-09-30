@@ -12,6 +12,12 @@ A production-grade, fully automated **Security Operations Center (SOC) Detection
 
 ---
 
+## 🗺️ Live Lab Topology & Zone Architecture
+
+![EVE-NG SOC Lab Topology](docs/images/eve-ng-soc-topology.png)
+
+---
+
 ## 🚀 Quick Navigation
 
 - 📖 **[Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)**
@@ -86,15 +92,43 @@ flowchart TD
 
 ---
 
-## ⚔️ Supported Attack Scenarios
+## 🛡️ Core Switching & VLAN Segmentation
 
-For full commands and detection signatures, see [Adversary Simulation Catalog](docs/ATTACK_CATALOG.md).
+The Cisco Core Switch segments internal enterprise domains and provides SPAN port mirroring out to the Suricata inspection engine:
 
-1. **External Reconnaissance & Port Scanning:** Stealth TCP SYN scans, UDP/FIN/Xmas scans, vulnerability scanning (Nmap, Nikto).
-2. **Web Exploitation & CVEs:** SQL Injection (`UNION SELECT`), Shellshock RCE (`CVE-2014-6271`), Local File Inclusion (LFI).
-3. **Layer 2 Switch Attacks:** CAM Table MAC flooding (`macof`), Dynamic Trunking Protocol exploitation (`yersinia`), ARP Spoofing.
-4. **Lateral Movement & Pivoting:** SSH dynamic SOCKS proxying through DMZ to Corporate LAN.
-5. **OT / ICS Exploits:** Unauthorized Modbus TCP coil manipulation and force-stop commands targeting PLC nodes.
+![Cisco Core Switch VLAN & 802.1Q Trunk Configuration](docs/images/cisco-switch-vlan-and-interfaces-config.png)
+
+---
+
+## ⚔️ Adversary Attack Simulation & Live Detection
+
+Adversary emulation is executed from the isolated Kali Red Team node (`172.31.255.100`) across the WAN perimeter:
+
+![Kali Linux Web SQL Injection Attack Simulation](docs/images/kali-linux-web-sql-attack.png)
+
+### Real-Time Suricata IDS Alert Log Stream (`eve.json`):
+
+![Suricata Live Attack Alert Logs](docs/images/suricata-attack-logs.png)
+
+---
+
+## 📊 Real-Time SIEM Event Triage (EveBox)
+
+Suricata 8.0.7 forwards all telemetry to the **EveBox SIEM Dashboard** (`:5636`) for threat hunting and incident triage:
+
+![EveBox SIEM Dashboard](docs/images/evebox-siem-dashboard.png)
+
+### Alert Deep Dive (Layer 7 SQL Injection Payload Inspection):
+
+![EveBox Alert Deep Dive](docs/images/evebox-alert-web-sql-injection.png)
+
+---
+
+## 🔍 Deep Packet Inspection (Wireshark)
+
+Deep packet inspection (DPI) verifies protocol compliance, TCP handshake lifecycles, and byte-level payload signatures on the wire:
+
+![Wireshark Live TCP Handshake & Packet Inspection](docs/images/wireshark-tcp-handshake-analysis.png)
 
 ---
 

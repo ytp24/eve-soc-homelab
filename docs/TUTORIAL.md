@@ -8,6 +8,8 @@ This guide provides a comprehensive, field-tested walkthrough for reproducing th
 
 The lab models a realistic enterprise perimeter with an isolated external threat actor attacking through the public Internet, a next-generation perimeter firewall, enterprise core switching, segmented internal enclaves, and an out-of-band SOC detection pipeline.
 
+![EVE-NG SOC Lab Live Topology](images/eve-ng-soc-topology.png)
+
 ```mermaid
 flowchart TD
     subgraph Hypervisor["KVM Hypervisor Host (tp24: 192.168.1.X)"]
@@ -139,18 +141,15 @@ sudo cp c7200-adventerprisek9-mz.124-24.T5.image /opt/unetlab/addons/dynamips/
 sudo chmod 755 /opt/unetlab/addons/dynamips/*
 ```
 
-### 4.3 Cisco IOL (IOS on Linux) Layer 2 Switch & License
+### 4.3 Cisco IOL (IOS on Linux) Layer 2 Switch
 1. Place binary in `/opt/unetlab/addons/iol/bin/`:
    ```bash
    sudo cp i86bi-linux-l2-adventerprise-15.1b.bin /opt/unetlab/addons/iol/bin/
    sudo chmod 755 /opt/unetlab/addons/iol/bin/i86bi-linux-l2-adventerprise-15.1b.bin
    ```
-2. Generate and install `iourc` license file:
-   ```ini
-   [license]
-   eve-ng = 97977750807b57b4;
-   ```
-   Save to both `/opt/unetlab/addons/iol/bin/iourc` and `/etc/iourc`.
+2. Configure VLAN trunks and access ports:
+
+![Cisco Core Switch Configuration](images/cisco-switch-vlan-and-interfaces-config.png)
 
 ### 4.4 Kali Linux Red Team Appliance
 1. Create directory `/opt/unetlab/addons/qemu/linux-kali/`.
@@ -220,22 +219,7 @@ ssh -p 2222 root@<HYPERVISOR_IP> "/opt/unetlab/wrappers/unl_wrapper -a capture -
 
 ## 7. Phase 6: Lab Parsing Fix & Topology Deployment
 
-### Root Cause Analysis of `"A non well formed numeric value encountered"`
-When loading custom UNL files, EVE-NG's XML parser in `/opt/unetlab/html/includes/__lab.php` (line 225) executes:
-```php
-$firstmac = sprintf('00:50:00:00:%02x:00', $this->id / 512);
-```
-If `<lab id="...">` contains a non-numeric UUID (e.g. `id="SOC-Lab"`), PHP triggers a non-well-formed numeric type error.
-
-### The Fix
-1. Ensure the `<lab>` root element has a positive integer ID:
-   ```xml
-   <lab name="SOC-Detection-Perimeter-Lab" version="1" scripttimeout="300" lock="0" id="1">
-   ```
-2. Explicitly specify `firstmac="00:50:00:00:04:00"` inside `<node>` definitions for Linux templates.
-3. Use modulo-16 interface IDs (`0`, `16`, `32`, `48`) for Cisco IOL interfaces.
-
-Deploy the lab file to `/opt/unetlab/labs/SOC-Detection-Perimeter-Lab.unl` and fix permissions:
+Deploy the validated lab file to `/opt/unetlab/labs/SOC-Detection-Perimeter-Lab.unl` and fix permissions:
 ```bash
 sudo cp topologies/SOC-Detection-Perimeter-Lab.unl /opt/unetlab/labs/
 sudo /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
@@ -297,29 +281,27 @@ sudo systemctl enable --now evebox
 ```
 Access EveBox at `http://<HYPERVISOR_IP>:5636`.
 
+![EveBox SIEM Dashboard](images/evebox-siem-dashboard.png)
+
 ---
 
 ## 9. Phase 8: Attack Simulation & Blue Team Verification
 
 From the **Kali Linux** node (`172.31.255.100`), simulate real adversary activity against the perimeter (`172.31.255.1`):
 
-### Test 1: Stealth Port Scan Reconnaissance
-```bash
-sudo nmap -sS -Pn -p 21,22,23,80,443,3306,3389,8080 172.31.255.1
-```
-*Expected Telemetry:* Suricata triggers `SOC ALERT: Inbound Port Scan Detected` / `ET SCAN Potential Nmap Scan` in `/var/log/suricata/eve.json`.
+![Kali Linux Attack Execution](images/kali-linux-web-sql-attack.png)
 
-### Test 2: Web SQL Injection Attack
-```bash
-curl -A "sqlmap/1.4.7" -s "http://172.31.255.1/?id=1%20UNION%20SELECT%20username,password%20FROM%20users--"
-```
-*Expected Telemetry:* Suricata registers `SOC ALERT: Web SQL Injection Union Select Pattern Detected` and `SOC ALERT: Security Scanner User-Agent Detected` (Severity 1).
+### Real-Time Suricata Alert Telemetry:
 
-### Test 3: Shellshock Remote Code Execution (CVE-2014-6271)
-```bash
-curl -s -X POST http://172.31.255.1/cgi-bin/test.sh -H "User-Agent: () { :;}; echo CVE-2014-6271"
-```
-*Expected Telemetry:* Suricata triggers `ET WEB_SERVER Possible CVE-2014-6271 Attempt`.
+![Suricata Live Alert Stream](images/suricata-attack-logs.png)
+
+### Alert Triage in EveBox SIEM:
+
+![EveBox Web SQL Injection Alert Details](images/evebox-alert-web-sql-injection.png)
+
+### Wire Verification & TCP Handshake Analysis (Wireshark):
+
+![Wireshark Live Packet Inspection](images/wireshark-tcp-handshake-analysis.png)
 
 ---
 
