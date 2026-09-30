@@ -1,0 +1,42 @@
+================================================================================
+           SURICATA NETWORK IDS & DETECTION ENGINEERING NOTES
+================================================================================
+
+1. SURICATA MULTI-THREADED ENGINE ARCHITECTURE
+--------------------------------------------------------------------------------
+- High-performance, multi-threaded open-source Network Threat Detection Engine.
+- Capture Methods: AF_PACKET (Linux zero-copy kernel ring), DPDK, PCAP, NFQueue (IPS).
+- Deep Packet Inspection (DPI) decodes protocols: HTTP/1.1, HTTP/2, TLS/JA3/JA4,
+  DNS, SMB, SSH, SMTP, Modbus, DNP3, DCERPC.
+
+2. SURICATA RULE SYNTAX STRUCTURE
+--------------------------------------------------------------------------------
+Format:
+action proto src_ip src_port direction dst_ip dst_port (rule_options; sid:X; rev:Y;)
+
+Example 1: Nmap Port Scan Detection
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET SCAN Potential Nmap Scan"; flags:S; window:1024; classtype:attempted-recon; sid:2009582; rev:3;)
+
+Example 2: SQL Injection Detection
+alert http $EXTERNAL_NET any -> $HTTP_SERVERS any (msg:"ET WEB_SERVER Possible SQLi in URI"; http.uri; content:"UNION"; nocase; content:"SELECT"; nocase; classtype:web-application-attack; sid:2018402; rev:1;)
+
+3. KEY RULE KEYWORDS
+--------------------------------------------------------------------------------
+- `msg`: Human-readable alert description.
+- `content`: Exact string/byte sequence to match.
+- `nocase`: Case-insensitive matching.
+- `http.uri`, `http.header`, `http.user_agent`: Normalized HTTP sticky buffers.
+- `tls.sni`: Extracts the Server Name Indication hostname from TLS Client Hello.
+- `flow`: Flow tracking options (e.g. `established`, `to_server`, `to_client`).
+- `classtype`: Attack classification category for prioritization.
+- `sid`: Signature ID (1-999,999 reserved for local rules; >= 2,000,000 for ET Open).
+
+4. EVE JSON LOGGING FORMAT (/var/log/suricata/eve.json)
+--------------------------------------------------------------------------------
+- Extensible Event format: Single output file containing structured JSON records.
+- Event Types:
+  * `event_type: "alert"`    -> IDS signature matches with rule metadata.
+  * `event_type: "flow"`     -> End-of-connection metrics (bytes, packets, duration).
+  * `event_type: "dns"`      -> DNS queries, record types, answer IPs.
+  * `event_type: "tls"`      -> TLS fingerprinting (JA3 hash, certificate subject).
+  * `event_type: "http"`     -> HTTP methods, URIs, user-agents, response codes.

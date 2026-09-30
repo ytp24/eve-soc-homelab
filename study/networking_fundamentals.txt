@@ -1,0 +1,43 @@
+================================================================================
+                    NETWORKING FUNDAMENTALS STUDY NOTES
+================================================================================
+
+1. OSI 7-LAYER REFERENCE MODEL
+--------------------------------------------------------------------------------
+Layer 7 - Application : HTTP, HTTPS, DNS, SSH, DHCP, Telnet, SNMP, FTP
+Layer 6 - Presentation: TLS/SSL, Data Compression, ASCII, Base64 encoding
+Layer 5 - Session     : Session establishment, maintenance, NetBIOS, RPC
+Layer 4 - Transport   : TCP (connection-oriented, reliable), UDP (connectionless)
+Layer 3 - Network     : IP (IPv4, IPv6), ICMP, ARP, OSPF, BGP, Routers
+Layer 2 - Data Link   : Ethernet (802.3), 802.1Q VLAN Tagging, MAC Addresses, Switches
+Layer 1 - Physical    : Physical cabling (Cat6, Fiber), NIC transceivers, RJ-45
+
+2. IP ADDRESSING & SUBNETTING
+--------------------------------------------------------------------------------
+- IPv4 Address: 32 bits (4 octets, 8 bits each). Example: 192.168.1.1
+- Subnet Mask: Distinguishes Network ID from Host ID.
+  * /24 = 255.255.255.0   -> 256 total IPs, 254 usable hosts (e.g. 10.10.10.0/24)
+  * /28 = 255.255.255.240 -> 16 total IPs, 14 usable hosts
+  * /30 = 255.255.255.252 -> 4 total IPs, 2 usable hosts (Point-to-Point links)
+  * /32 = 255.255.255.255 -> Single host route
+
+- RFC 1918 Private IP Ranges (Non-routable on public Internet):
+  * Class A: 10.0.0.0 - 10.255.255.255     (/8 prefix)
+  * Class B: 172.16.0.0 - 172.31.255.255   (/12 prefix)
+  * Class C: 192.168.0.0 - 192.168.255.255 (/16 prefix)
+
+3. ADDRESS RESOLUTION PROTOCOL (ARP)
+--------------------------------------------------------------------------------
+- Maps Layer 3 IP address to Layer 2 MAC address within a local broadcast domain.
+- ARP Request: Broadcast (ff:ff:ff:ff:ff:ff) - "Who has IP 10.10.10.1? Tell 10.10.10.50"
+- ARP Reply: Unicast - "10.10.10.1 is at 50:00:00:01:00:00"
+- Security Threat: ARP Spoofing / Poisoning enables Man-in-the-Middle (MitM) attacks.
+
+4. VLANS & TRUNKING (802.1Q)
+--------------------------------------------------------------------------------
+- VLAN (Virtual Local Area Network): Logically segments a physical switch into
+  distinct broadcast domains (Layer 2 isolation).
+- Access Port: Belongs to a single VLAN, strips 802.1Q tag before egressing to end-host.
+- Trunk Port: Carries traffic for multiple VLANs by adding a 4-byte 802.1Q header
+  containing a 12-bit VLAN ID (VID ranges 1-4094).
+- Inter-VLAN Routing: Requires a Layer 3 router (Router-on-a-Stick) or L3 Switch (SVI).

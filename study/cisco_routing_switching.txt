@@ -1,0 +1,41 @@
+================================================================================
+           CISCO ROUTING & SWITCHING ESSENTIALS STUDY NOTES
+================================================================================
+
+1. LAYER 2 SWITCHING MECHANISMS
+--------------------------------------------------------------------------------
+- MAC Address Table (CAM Table): Maps physical switch ports to connected MACs.
+- Frame Forwarding Logic:
+  * Known Unicast: Frame forwarded ONLY out the specific learned egress port.
+  * Unknown Unicast: Frame flooded out ALL ports in the VLAN except the ingress port.
+  * Broadcast / Multicast: Flooded out all active ports in the VLAN.
+- Spanning Tree Protocol (STP / 802.1w Rapid-PVST):
+  * Prevents Layer 2 loops and broadcast storms.
+  * Port States: Blocking -> Listening -> Learning -> Forwarding.
+  * PortFast: Bypasses listening/learning for end-host edge ports.
+
+2. CISCO SWITCH COMMAND CHEATSHEET
+--------------------------------------------------------------------------------
+  * show vlan brief               -> List all active VLANs and assigned ports
+  * show mac address-table        -> View learned MAC address associations
+  * show interfaces trunk         -> Check 802.1Q trunk status and allowed VLANs
+  * show spanning-tree            -> Inspect root bridge election and blocked ports
+  * show monitor session 1        -> Verify SPAN port mirroring status
+
+3. LAYER 3 ROUTING CONCEPTS
+--------------------------------------------------------------------------------
+- Routing Table Lookup: Matches destination IP against routes using Longest Prefix Match.
+- Administrative Distance (AD) - Route Trustworthiness:
+  * Connected Interface : 0
+  * Static Route        : 1
+  * eBGP                : 20
+  * EIGRP (Internal)    : 90
+  * OSPF                : 110
+  * iBGP                : 200
+
+4. DYNAMIC ROUTING: OSPF (OPEN SHORTEST PATH FIRST)
+--------------------------------------------------------------------------------
+- Link-State IGP using Dijkstra's SPF (Shortest Path First) algorithm.
+- Standard Metric: Cost = Reference Bandwidth / Interface Bandwidth.
+- Neighbor Adjacency States: Down -> Init -> 2-Way -> ExStart -> Exchange -> Loading -> Full.
+- Designated Router (DR) / Backup Designated Router (BDR) elected on broadcast segments.

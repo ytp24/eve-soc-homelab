@@ -1,0 +1,38 @@
+================================================================================
+          ADVERSARY ATTACK TECHNIQUES & DETECTION MAPPING NOTES
+================================================================================
+
+1. PORT SCANNING & RECONNAISSANCE (MITRE T1046)
+--------------------------------------------------------------------------------
+- TCP SYN Stealth Scan (`nmap -sS`):
+  * Sends SYN; receives SYN-ACK (port open) -> immediately sends RST to avoid full connection.
+  * Detection: Suricata alerts on high volume of half-open TCP connections without ACK.
+- TCP Connect Scan (`nmap -sT`):
+  * Completes full 3-way handshake via OS `connect()` API call. Slower, leaves log trace.
+- UDP Port Scan (`nmap -sU`):
+  * Sends empty UDP packet; receives ICMP Port Unreachable (Type 3 Code 3) if closed.
+- Xmas / FIN / Null Scans (`nmap -sX`, `-sF`, `-sN`):
+  * Sets abnormal TCP flag combinations (FIN+PSH+URG) to bypass simple packet filters.
+
+2. CREDENTIAL ACCESS & BRUTE FORCE (MITRE T1110)
+--------------------------------------------------------------------------------
+- Password Spraying: Attempts one common password against many usernames to evade lockout.
+- Brute Force (`hydra -l user -P wordlist target service`):
+  * Rapid authentication requests over SSH (port 22), RDP (port 3389), SMB (port 445).
+  * Detection: Spike in failed authentication logons (Windows Event ID 4625 / Linux sshd auth failures).
+
+3. WEB APPLICATION EXPLOITATION (MITRE T1190)
+--------------------------------------------------------------------------------
+- SQL Injection (SQLi):
+  * Injects SQL syntax (`' OR '1'='1`, `UNION SELECT`) into input parameters.
+  * Detection: WAF regex matches, Suricata sticky buffer `http.uri` / `http.request_body`.
+- Cross-Site Scripting (XSS):
+  * Injects malicious JavaScript (`<script>alert(1)</script>`) into web response.
+- Command Injection:
+  * Uses shell metacharacters (`;`, `|`, `&&`, `` ` ``) to execute arbitrary OS commands.
+
+4. LATERAL MOVEMENT & PIVOTING (MITRE T1021)
+--------------------------------------------------------------------------------
+- Port Forwarding / SSH Tunneling: Using compromised perimeter node as a proxy to reach
+  isolated internal subnets (e.g. DMZ -> Corporate LAN -> OT/ICS network).
+- Mitigation: Strict egress filtering on firewalls, inter-VLAN microsegmentation.

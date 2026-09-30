@@ -1,0 +1,43 @@
+================================================================================
+               TCP/IP & PACKET ANALYSIS STUDY NOTES
+================================================================================
+
+1. TCP THREE-WAY HANDSHAKE (CONNECTION ESTABLISHMENT)
+--------------------------------------------------------------------------------
+Client (192.168.1.100)                     Server / Firewall (192.168.1.1)
+        |                                                 |
+        | -------- [1] SYN (seq=X) ---------------------> |
+        |                                                 |
+        | <------- [2] SYN-ACK (seq=Y, ack=X+1) --------- |
+        |                                                 |
+        | -------- [3] ACK (seq=X+1, ack=Y+1) ----------> |
+        |                                                 |
+        * Connection State: ESTABLISHED *
+
+2. TCP CONTROL FLAGS
+--------------------------------------------------------------------------------
+- SYN (Synchronize): Initiates a new connection sequence number.
+- ACK (Acknowledgment): Confirms receipt of bytes up to ack number.
+- PSH (Push): Requests receiver to immediately pass data to application buffer.
+- FIN (Finish): Gracefully terminates connection in one direction.
+- RST (Reset): Abruptly terminates / rejects a connection (e.g. closed port).
+- URG (Urgent): Points to urgent out-of-band data.
+
+3. TCP CONNECTION TEARDOWN (4-WAY CLOSE)
+--------------------------------------------------------------------------------
+Client                                           Server
+  | -------- FIN (seq=A) --------------------------> |
+  | <------- ACK (ack=A+1) ------------------------- |
+  | <------- FIN (seq=B) --------------------------- |
+  | -------- ACK (ack=B+1) ------------------------> |
+
+4. PACKET HEADER FIELDS TO INSPECT IN SOC INVESTIGATIONS
+--------------------------------------------------------------------------------
+- IPv4 Header:
+  * TTL (Time-to-Live): Decremented per hop. Used to detect OS (Linux: 64, Windows: 128, Cisco: 255).
+  * Identification & Flags: DF (Don't Fragment), MF (More Fragments).
+  * Protocol Field: 6 (TCP), 17 (UDP), 1 (ICMP), 47 (GRE), 50 (ESP).
+- TCP Header:
+  * Source Port: Ephemeral high port (e.g. 53538).
+  * Destination Port: Service well-known port (e.g. 80, 443, 22).
+  * Window Size: Flow control buffer capacity.

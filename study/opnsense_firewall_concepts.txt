@@ -1,0 +1,38 @@
+================================================================================
+           OPNSENSE NEXT-GEN FIREWALL & PERIMETER STUDY NOTES
+================================================================================
+
+1. STATEFUL PACKET INSPECTION (SPI)
+--------------------------------------------------------------------------------
+- Stateful Filtering: Tracks active connection states in a state table (pf / packet filter).
+- Flow Evaluation:
+  * Inbound SYN packet -> Checked against rule list top-to-bottom (first match wins).
+  * If allowed -> State entry created: (Src_IP, Src_Port, Dst_IP, Dst_Port, Proto, State).
+  * Return traffic (SYN-ACK, ACK, Data) -> Matches existing state in memory table,
+    bypassing rule re-evaluation (instant high-speed forwarding).
+
+2. SECURITY ZONES & TRUST LEVELS
+--------------------------------------------------------------------------------
+- WAN (Untrusted External): Strict ingress blocking. Only allows explicit port forwards
+  or established return sessions.
+- LAN (Trusted Internal): Corporate workstations. Outbound Internet allowed via NAT;
+  inter-zone access to sensitive segments restricted.
+- DMZ (Demilitarized Zone - Semi-Trusted): Public-facing servers (Web, Mail). Isolated
+  from internal LAN; if compromised, attacker cannot traverse laterally to LAN.
+- OT / ICS (High Security Industrial): Critical PLC/SCADA devices. Air-gapped or
+  strictly restricted to dedicated industrial protocols (Modbus, DNP3, CIP).
+
+3. NETWORK ADDRESS TRANSLATION (NAT)
+--------------------------------------------------------------------------------
+- Source NAT (SNAT / Masquerade): Translates private RFC 1918 IPs to public WAN IP
+  on egress so internal hosts can browse the Internet.
+- Destination NAT (DNAT / Port Forwarding): Translates public WAN IP:Port to an
+  internal private IP:Port (e.g. WAN:443 -> DMZ_Host:443).
+- 1:1 NAT: Maps a dedicated public IP to a specific internal private IP.
+
+4. OPNSENSE LOGGING & PF DIAGNOSTICS
+--------------------------------------------------------------------------------
+- Filter Log: `/var/log/filter.log` (State table creation, packet passes, packet blocks).
+- View Active States via CLI: `pfctl -s states`
+- View Loaded Rules: `pfctl -s rules`
+- Reset State Table: `pfctl -F state`

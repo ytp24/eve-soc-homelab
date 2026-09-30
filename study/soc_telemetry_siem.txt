@@ -1,0 +1,37 @@
+================================================================================
+              SOC OPERATIONS, TELEMETRY & SIEM STUDY NOTES
+================================================================================
+
+1. SOC DETECTION & TRIAGE LIFECYCLE (TIER 1 / TIER 2)
+--------------------------------------------------------------------------------
+1. Ingestion      : Telemetry collected from Firewalls (OPNsense), IDS (Suricata),
+                    Switches (NetFlow/Syslog), and Endpoints (Sysmon/EDR).
+2. Normalization  : Parsing raw logs into standard schema (CIM, Elastic ECS, CEF).
+3. Correlation    : SIEM rules correlate multiple low-severity events into high-fidelity
+                    notable incidents (e.g. Port Scan + Outbound C2 = Active Breach).
+4. Triage (Tier 1): Alert validation -> True Positive (TP) vs False Positive (FP).
+5. Investigation  : Deep packet inspection (PCAP), host forensics, IP/domain reputation.
+6. Containment    : Firewall block rule, host isolation, credential revocation.
+7. Post-Incident  : Tuning detection signatures to suppress repetitive noise.
+
+2. EVEBOX & REAL-TIME EVENT MANAGEMENT
+--------------------------------------------------------------------------------
+- EveBox UI (`http://<server>:5636`): Web console tailored for Suricata `eve.json`.
+- Inbox Workflow: Alerts arrive in the Inbox. Analysts review and:
+  * Archive  -> Acknowledged, benign or expected activity.
+  * Escalate -> Flagged for deep investigation or incident ticket creation.
+  * Silence  -> Creates threshold / suppression filter to mute false positives.
+
+3. LOGGING PROTOCOLS & AGGREGATION
+--------------------------------------------------------------------------------
+- Syslog (RFC 5424): Standard UDP/TCP port 514 (Facility.Severity levels 0-7).
+  * 0: Emergency, 1: Alert, 2: Critical, 3: Error, 4: Warning, 5: Notice, 6: Info, 7: Debug.
+- NetFlow / IPFIX: Flow-level metadata (Source IP/Port, Dst IP/Port, Byte counts)
+  without full packet payload storage (great for high-bandwidth perimeter monitoring).
+- SIEM Forwarders: Splunk Universal Forwarder, Elastic Filebeat, Fluentbit, Vector.
+
+4. FALSE POSITIVE TUNING STRATEGIES
+--------------------------------------------------------------------------------
+- Thresholding: Limit alert rate (e.g. alert once per 10 minutes per host).
+- Suppression: Suppress specific rule ID for approved vulnerability scanner IPs.
+- Variable Scoping: Ensure `$HOME_NET` and `$EXTERNAL_NET` accurately define internal subnets.

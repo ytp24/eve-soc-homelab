@@ -1,0 +1,42 @@
+================================================================================
+              SPAN (PORT MIRRORING) & NETWORK TAPS STUDY NOTES
+================================================================================
+
+1. WHAT IS SPAN (SWITCHED PORT ANALYZER)?
+--------------------------------------------------------------------------------
+- Hardware-assisted mechanism on enterprise switches to copy packets from one or
+  more source ports/VLANs and send them out a dedicated destination monitor port.
+- Critical for Network Intrusion Detection Systems (NIDS like Suricata/Snort),
+  Network Performance Monitoring (NPM), and live Wireshark packet capture.
+
+2. SPAN TYPES
+--------------------------------------------------------------------------------
+- Local SPAN: Source and destination ports reside on the SAME physical switch.
+- RSPAN (Remote SPAN): Mirrored traffic is flooded over a dedicated RSPAN VLAN
+  across multiple trunked switches.
+- ERSPAN (Encapsulated Remote SPAN): Mirrored traffic is encapsulated inside GRE
+  (IP protocol 47) packets and routed across Layer 3 networks to a remote collector.
+
+3. CISCO IOS SPAN CONFIGURATION TEMPLATE
+--------------------------------------------------------------------------------
+! Define traffic sources to monitor (both ingress and egress)
+monitor session 1 source interface Ethernet0/0 both
+monitor session 1 source interface Ethernet0/1 both
+monitor session 1 source interface Ethernet0/2 both
+
+! Define destination port connected to Suricata IDS sensor NIC
+monitor session 1 destination interface Ethernet0/3
+
+! Verification
+show monitor session 1
+
+4. SPAN VS NETWORK TAPs
+--------------------------------------------------------------------------------
+- SPAN Port:
+  * Low cost (uses existing switch hardware).
+  * May drop packets under heavy switch backplane load (SPAN has lowest QoS priority).
+  * Filters out malformed CRC errors and Layer 1 physical faults.
+- Network TAP (Test Access Point):
+  * Dedicated physical hardware in-line device.
+  * Captures 100% full-duplex line rate traffic without switch CPU overhead.
+  * Fails-open / Fails-closed hardware reliability.
