@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="SOC-Detection-Perimeter-Lab" id="1ff35a5d-17c5-45d3-8a44-b1b5446d41e8" version="1" scripttimeout="300" lock="0">
+  <topology>
+    <nodes>
+      <node id="1" name="OPNsense-FW" type="qemu" template="opnsense" image="opnsense-24.7" console="vnc" cpu="2" cpulimit="1" ram="2048" ethernet="4" uuid="39d9003e-f54b-425f-ba21-fc257915c2bb" qemu_options="-machine type=pc,accel=kvm -nographic -usbdevice tablet -boot order=dc -serial mon:stdio" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Firewall.png" config="0" left="480" top="200">
+        <interface id="0" name="vtnet0" type="ethernet" network_id="1"/>
+        <interface id="1" name="vtnet1" type="ethernet" network_id="3"/>
+        <interface id="2" name="vtnet2" type="ethernet" network_id="4"/>
+        <interface id="3" name="vtnet3" type="ethernet" network_id="5"/>
+      </node>
+      <node id="2" name="Cisco-L2-Switch" type="iol" template="iol" image="i86bi-linux-l2-adventerprise-15.1b.bin" ethernet="1" nvram="1024" ram="1024" serial="0" console="telnet" delay="0" icon="Switch.png" config="0" left="480" top="340">
+        <interface id="0" name="e0/0" type="ethernet" network_id="3"/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="4"/>
+        <interface id="32" name="e0/2" type="ethernet" network_id="5"/>
+        <interface id="48" name="e0/3" type="ethernet" network_id="2"/>
+      </node>
+      <node id="3" name="Cisco-7200-Router" type="dynamips" template="c7200" image="c7200-adventerprisek9-mz.124-24.T5.image" idlepc="0x0" nvram="128" ram="512" console="telnet" delay="0" icon="Router.png" config="0" left="760" top="200">
+        <interface id="0" name="fa0/0" type="ethernet" network_id="1"/>
+      </node>
+      <node id="4" name="Kali-RedTeam" type="qemu" template="linux" image="linux-kali" console="telnet" cpu="1" cpulimit="1" ram="1024" ethernet="1" uuid="9f090c46-2e97-47ba-b8e7-dea1497d0bb1" firstmac="00:50:00:00:04:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Desktop.png" config="0" left="200" top="100">
+        <interface id="0" name="e0" type="ethernet" network_id="1"/>
+      </node>
+      <node id="5" name="DMZ-Web-Server" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Server.png" config="0" left="480" top="480">
+        <interface id="0" name="eth0" type="ethernet" network_id="4"/>
+      </node>
+      <node id="6" name="Corp-Client-PC" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Router.png" config="0" left="220" top="480">
+        <interface id="0" name="eth0" type="ethernet" network_id="3"/>
+      </node>
+      <node id="7" name="OT-PLC-Node" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Desktop2.png" config="0" left="740" top="480">
+        <interface id="0" name="eth0" type="ethernet" network_id="5"/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="pnet1" name="Internet-Cloud-pnet1" left="480" top="60" visibility="1" icon="cloud.png"/>
+      <network id="2" type="pnet0" name="Local-Cloud-pnet0" left="760" top="60" visibility="1" icon="cloud.png"/>
+      <network id="3" type="bridge" name="Corp-LAN-VLAN10" left="220" top="340" visibility="1" icon="lan.png"/>
+      <network id="4" type="bridge" name="DMZ-VLAN20" left="480" top="410" visibility="1" icon="lan.png"/>
+      <network id="5" type="bridge" name="OT-ICS-VLAN30" left="740" top="340" visibility="1" icon="lan.png"/>
+    </networks>
+  </topology>
+</lab>

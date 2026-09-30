@@ -1,0 +1,15 @@
+---
+# Role: eve_topology
+# Deploys the SOC Detection & Perimeter Lab XML topology to EVE-NG
+
+- name: Deploy SOC Detection Perimeter Lab Topology
+  copy:
+    src: "../../../topologies/SOC-Detection-Perimeter-Lab.unl"
+    dest: /opt/unetlab/labs/SOC-Detection-Perimeter-Lab.unl
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Fix UNetLab permissions across all lab topologies
+  command: /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+  changed_when: false

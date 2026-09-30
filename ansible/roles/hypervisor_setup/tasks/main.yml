@@ -1,0 +1,90 @@
+---
+# Role: hypervisor_setup
+# Configures KVM hypervisor, Nginx reverse proxy, and firewall forwarding
+
+- name: Install KVM, libvirt, and virtualization packages
+  apt:
+    name:
+      - qemu-system-x86
+      - libvirt-daemon-system
+      - libvirt-clients
+      - bridge-utils
+      - virtinst
+      - cpu-checker
+      - ovmf
+      - nginx
+      - libnginx-mod-stream
+      - iptables-persistent
+      - netfilter-persistent
+      - cloud-image-utils
+    state: present
+    update_cache: yes
+
+- name: Ensure IP forwarding is enabled in sysctl
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: yes
+
+- name: Configure Nginx HTTP Reverse Proxy for EVE-NG Web UI
+  copy:
+    dest: /etc/nginx/conf.d/00-eve-ng.conf
+    content: |
+      server {
+          listen 80 default_server;
+          listen [::]:80 default_server;
+          server_name _;
+
+          client_max_body_size 0;
+
+          location / {
+              proxy_pass http://{{ eve_vm_internal_ip }}:80;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+
+              # WebSocket Support for Guacamole HTML5 Consoles
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 86400;
+              proxy_send_timeout 86400;
+          }
+      }
+    mode: "0644"
+  notify: Reload Nginx
+
+- name: Ensure Nginx Stream Block is configured for SSH / SFTP
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    line: "stream { server { listen {{ eve_ssh_port }}; proxy_pass {{ eve_vm_internal_ip }}:22; proxy_timeout 3h; } }"
+    insertafter: EOF
+  notify: Reload Nginx
+
+- name: Configure iptables NAT PREROUTING rules for console ports
+  iptables:
+    table: nat
+    chain: PREROUTING
+    protocol: tcp
+    destination_port: "{{ item.start }}:{{ item.end }}"
+    jump: DNAT
+    to_destination: "{{ eve_vm_internal_ip }}:{{ item.start }}-{{ item.end }}"
+  loop:
+    - { start: "{{ console_port_range_start }}", end: "{{ console_port_range_end }}" }
+    - { start: "{{ vnc_port_range_start }}", end: "{{ vnc_port_range_end }}" }
+
+- name: Insert top-priority FORWARD rules for EVE-NG traffic
+  iptables:
+    chain: FORWARD
+    rule_num: 1
+    destination: "{{ eve_vm_internal_ip }}"
+    jump: ACCEPT
+
+- name: Insert top-priority return FORWARD rule
+  iptables:
+    chain: FORWARD
+    rule_num: 2
+    source: "{{ eve_vm_internal_ip }}"
+    jump: ACCEPT

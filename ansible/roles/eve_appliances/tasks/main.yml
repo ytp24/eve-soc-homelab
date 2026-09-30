@@ -1,0 +1,62 @@
+---
+# Role: eve_appliances
+# Provisions appliance directories, license files, and verifies images on EVE-NG VM
+
+- name: Ensure appliance directories exist in EVE-NG
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /opt/unetlab/addons/qemu/opnsense-24.7
+    - /opt/unetlab/addons/qemu/linux-kali
+    - /opt/unetlab/addons/iol/bin
+    - /opt/unetlab/addons/dynamips
+    - /opt/unetlab/labs
+
+- name: Provision Cisco IOL License (iourc)
+  copy:
+    dest: "{{ item }}"
+    content: |
+      [license]
+      eve-ng = 97977750807b57b4;
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - /opt/unetlab/addons/iol/bin/iourc
+    - /etc/iourc
+
+- name: Check existence of OPNsense image
+  stat:
+    path: /opt/unetlab/addons/qemu/opnsense-24.7/virtioa.qcow2
+  register: opnsense_img
+
+- name: Check existence of Kali Linux image
+  stat:
+    path: /opt/unetlab/addons/qemu/linux-kali/virtioa.qcow2
+  register: kali_img
+
+- name: Check existence of Cisco IOL L2 image
+  stat:
+    path: /opt/unetlab/addons/iol/bin/i86bi-linux-l2-adventerprise-15.1b.bin
+  register: iol_img
+
+- name: Check existence of Cisco 7200 Dynamips image
+  stat:
+    path: /opt/unetlab/addons/dynamips/c7200-adventerprisek9-mz.124-24.T5.image
+  register: dynamips_img
+
+- name: Display Image Verification Summary
+  debug:
+    msg:
+      - "OPNsense 24.7 Present: {{ opnsense_img.stat.exists }}"
+      - "Kali Linux Present: {{ kali_img.stat.exists }}"
+      - "Cisco IOL L2 Present: {{ iol_img.stat.exists }}"
+      - "Cisco 7200 Present: {{ dynamips_img.stat.exists }}"
+
+- name: Fix EVE-NG addon permissions
+  command: /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+  changed_when: false

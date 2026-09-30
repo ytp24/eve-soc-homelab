@@ -1,0 +1,51 @@
+---
+# Role: eve_vm_deploy
+# Configures internal EVE-NG VM networking, kernel, and bridge services
+
+- name: Ensure EVE-NG cloud bridges service is created
+  copy:
+    dest: /etc/systemd/system/eve-cloud-bridges.service
+    content: |
+      [Unit]
+      Description=EVE-NG Internet and Local Cloud Bridges
+      After=network.target
+
+      [Service]
+      Type=oneshot
+      RemainAfterExit=yes
+      ExecStart=/bin/bash -c "brctl addbr pnet0 2>/dev/null || true; brctl addbr pnet1 2>/dev/null || true; brctl addbr pnet2 2>/dev/null || true; ip link set pnet0 up; ip link set pnet1 up; ip link set pnet2 up; ip addr add {{ eve_internet_cloud_gateway }}/24 dev pnet1 2>/dev/null || true; ip addr add {{ eve_local_cloud_gateway }}/24 dev pnet2 2>/dev/null || true; iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE 2>/dev/null || true; systemctl restart dnsmasq"
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: "0644"
+
+- name: Enable and start eve-cloud-bridges service
+  systemd:
+    name: eve-cloud-bridges
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: Configure dnsmasq for Internet Cloud (pnet1) and Local Cloud (pnet2)
+  copy:
+    dest: /etc/dnsmasq.d/eve-clouds.conf
+    content: |
+      port=0
+      interface=pnet1
+      dhcp-range=pnet1,172.31.255.50,172.31.255.200,255.255.255.0,12h
+      dhcp-option=pnet1,option:router,{{ eve_internet_cloud_gateway }}
+      dhcp-option=pnet1,option:dns-server,8.8.8.8,1.1.1.1
+
+      interface=pnet2
+      dhcp-range=pnet2,10.255.255.50,10.255.255.200,255.255.255.0,12h
+      dhcp-option=pnet2,option:router,{{ eve_local_cloud_gateway }}
+      dhcp-option=pnet2,option:dns-server,8.8.8.8,1.1.1.1
+    mode: "0644"
+  notify: Restart dnsmasq
+
+- name: Ensure EVE-NG UKSM kernel is set as GRUB default
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_DEFAULT='
+    line: 'GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.17.8-eve-ng-uksm-wg+"'
+  notify: Update GRUB

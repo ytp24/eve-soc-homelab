@@ -1,0 +1,22 @@
+---
+# ==============================================================================
+# Master Playbook: EVE-NG SOC & Network Detection Perimeter Home Lab
+# ==============================================================================
+# Usage:
+#   ansible-playbook -i inventory.ini site.yml
+# ==============================================================================
+
+- name: Provision Host Hypervisor & Port Forwarding
+  hosts: hypervisor
+  become: yes
+  roles:
+    - hypervisor_setup
+
+- name: Configure EVE-NG Guest VM Networking & Kernel
+  hosts: eve_vm
+  become: yes
+  roles:
+    - eve_vm_deploy
+    - eve_appliances
+    - eve_topology
+    - soc_telemetry

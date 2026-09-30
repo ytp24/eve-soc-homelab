@@ -1,0 +1,29 @@
+# Ansible local configs with real host IPs & credentials
+ansible/inventory.ini
+ansible/group_vars/all.yml
+*.retry
+
+# Disk images, firmware binaries, and large ISOs (use retrieval scripts instead)
+*.qcow2
+*.img
+*.iso
+*.vmdk
+*.ova
+*.tar.gz
+*.zip
+*.bin
+*.image
+
+# OS and Editor artifacts
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local runtime logs
+*.log

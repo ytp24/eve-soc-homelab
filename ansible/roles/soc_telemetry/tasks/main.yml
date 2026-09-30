@@ -1,0 +1,81 @@
+---
+# Role: soc_telemetry
+# Provisions Suricata Network IDS and EveBox UI / Splunk forwarder integration
+
+- name: Ensure Suricata is installed on EVE-NG or Analysis host
+  apt:
+    name:
+      - suricata
+      - jq
+      - curl
+      - iptables
+    state: present
+    update_cache: yes
+
+- name: Create EveBox directory
+  file:
+    path: /opt/evebox
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Check if EveBox binary exists
+  stat:
+    path: /usr/local/bin/evebox
+  register: evebox_bin
+
+- name: Download EveBox binary if missing
+  get_url:
+    url: "https://github.com/jasonish/evebox/releases/download/v0.18.2/evebox-linux-amd64.zip"
+    dest: /tmp/evebox-linux-amd64.zip
+    mode: "0644"
+  when: not evebox_bin.stat.exists
+
+- name: Unzip EveBox binary
+  unarchive:
+    src: /tmp/evebox-linux-amd64.zip
+    dest: /opt/evebox/
+    remote_src: yes
+  when: not evebox_bin.stat.exists
+
+- name: Symlink EveBox binary to /usr/local/bin
+  file:
+    src: /opt/evebox/evebox-linux-amd64/evebox
+    dest: /usr/local/bin/evebox
+    state: link
+    force: yes
+  when: not evebox_bin.stat.exists
+
+- name: Install EveBox Systemd Unit
+  copy:
+    dest: /etc/systemd/system/evebox.service
+    content: |
+      [Unit]
+      Description=EveBox Suricata Event Management UI
+      After=network.target suricata.service
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/local/bin/evebox server --input /var/log/suricata/eve.json --port {{ evebox_port }} --host 0.0.0.0 --datadir /var/lib/evebox
+      Restart=always
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: "0644"
+
+- name: Ensure EveBox data directory exists
+  file:
+    path: /var/lib/evebox
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Enable and start EveBox service
+  systemd:
+    name: evebox
+    enabled: yes
+    state: started
+    daemon_reload: yes

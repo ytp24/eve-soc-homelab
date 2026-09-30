@@ -1,0 +1,36 @@
+# Home Lab Configuration Variables (Masked Example)
+---
+# Hypervisor & Network Settings
+hypervisor_lan_ip: "192.168.1.X"
+eve_vm_internal_ip: "192.168.122.91"
+eve_vm_mac: "52:54:00:b8:61:60"
+
+# VM Resource Sizing
+eve_vm_ram_mb: 16384
+eve_vm_vcpus: 4
+eve_vm_disk_gb: 60
+
+# Cloud Subnet Settings inside EVE-NG
+eve_internet_cloud_subnet: "172.31.255.0/24"
+eve_internet_cloud_gateway: "172.31.255.1"
+eve_local_cloud_subnet: "10.255.255.0/24"
+eve_local_cloud_gateway: "10.255.255.1"
+
+# Port Forwarding Ranges
+console_port_range_start: 32768
+console_port_range_end: 65000
+vnc_port_range_start: 5900
+vnc_port_range_end: 6000
+
+# EVE-NG Web & SSH Port
+eve_web_port: 80
+eve_ssh_port: 2222
+evebox_port: 5636
+
+# Default Lab Credentials
+eve_web_user: "admin"
+eve_web_pass: "eve"
+opnsense_user: "root"
+opnsense_pass: "opnsense"
+kali_user: "kali"
+kali_pass: "kali"
