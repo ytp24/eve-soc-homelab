@@ -1,47 +1,52 @@
 # End-to-End SOC Detection & Perimeter Engineering Home Lab: Live Deployment Guide
 
-This guide provides a comprehensive, field-tested walkthrough for reproducing the complete **Enterprise SOC Detection & Perimeter Home Lab**. It covers everything from bare-metal KVM hypervisor provisioning to EVE-NG nested virtualization, Next-Gen Firewalling (OPNsense), Cisco enterprise switching/routing, Kali Linux adversary simulation, Suricata Network IDS, and EveBox/Splunk SIEM telemetry pipelines.
+This guide provides a comprehensive, field-tested walkthrough for reproducing the complete **Enterprise SOC Detection & Perimeter Home Lab**. It covers everything from bare-metal KVM hypervisor provisioning to EVE-NG nested virtualization, Next-Gen Firewalling (OPNsense), Cisco enterprise switching/routing, isolated Kali Linux adversary simulation, Suricata Network IDS, and EveBox SIEM telemetry pipelines.
 
 ---
 
 ## 1. Architecture Overview
 
+The lab models a realistic enterprise perimeter with an isolated external threat actor attacking through the public Internet, a next-generation perimeter firewall, enterprise core switching, segmented internal enclaves, and an out-of-band SOC detection pipeline.
+
 ```mermaid
 flowchart TD
     subgraph Hypervisor["KVM Hypervisor Host (tp24: 192.168.1.X)"]
         subgraph EVE_VM["EVE-NG Nested Virtualization Environment (192.168.122.91)"]
-            subgraph WAN["External / Internet Cloud (pnet1)"]
+            subgraph WAN["External / Internet Cloud (pnet1 - 172.31.255.0/24)"]
                 NAT_GW["NAT Gateway (172.31.255.1)"]
+                KALI["Kali Linux Red Team\n(172.31.255.100)\n* Isolated External Attacker\n* Public Internet Reachability"]
             end
 
             subgraph Perimeter["Perimeter Defense & Routing"]
-                FW["OPNsense 24.7 Firewall\nWAN: 172.31.255.50\nLAN: 10.10.10.1\nOPT1 (DMZ): 10.10.20.1"]
-                R1["Cisco 7200 Core Router\n(BGP / OSPF / EIGRP)"]
-                SW1["Cisco IOL L2 Switch\n(VLAN 10, 20, 99 SPAN)"]
+                FW["OPNsense 24.7 Firewall\nWAN: 172.31.255.50\nLAN (VLAN 10): 10.10.10.1\nDMZ (VLAN 20): 10.10.20.1\nOT  (VLAN 30): 10.10.30.1"]
+                R1["Cisco 7200 Core Router\n(fa0/0: WAN transit)"]
+                SW1["Cisco IOL L2 Switch\n(VLAN 10, 20, 30, 99 SPAN)"]
             end
 
-            subgraph Endpoints["Virtual Endpoints & Threat Actors"]
-                KALI["Kali Linux Red Team\n(nmap, hydra, scapy, metasploit)"]
-                SRV["Enterprise Web / App Server\n(Suricata Monitored)"]
-                PC["Corporate Workstation (VPCS)"]
+            subgraph Endpoints["Segmented Virtual Endpoints"]
+                DMZ_SRV["DMZ Web Server (VPCS / Linux)\n(10.10.20.10:80)"]
+                CORP_PC["Corporate Workstation (VPCS)\n(10.10.10.50)"]
+                OT_PLC["OT / ICS SCADA Node (VPCS)\n(10.10.30.100:502)"]
             end
 
             subgraph Telemetry["SOC Telemetry & Detection Pipeline"]
-                SPAN["SPAN / Mirror Port\n(Promiscuous Mode)"]
-                SURICATA["Suricata IDS Engine 8.0.7\n(ET Open Threat Signatures)"]
+                SPAN["SPAN / Mirror Port (e0/3)\n(Promiscuous Mode)"]
+                SURICATA["Suricata IDS Engine 8.0.7\n(Multi-Threaded AF_PACKET)"]
                 EVE_JSON["/var/log/suricata/eve.json"]
-                EVEBOX["EveBox Event UI (:5636) / Splunk Forwarder"]
+                EVEBOX["EveBox Event UI (:5636)"]
             end
         end
     end
 
+    NAT_GW --- KALI
     NAT_GW --- FW
-    FW --- R1
-    R1 --- SW1
-    SW1 --- KALI
-    SW1 --- SRV
-    SW1 --- PC
-    SW1 -.->|Port Mirror / Tap| SPAN
+    NAT_GW --- R1
+    FW ===|802.1Q Trunk| SW1
+    SW1 --- DMZ_SRV
+    SW1 --- CORP_PC
+    SW1 --- OT_PLC
+    SW1 -.->|Port Mirror e0/3| SPAN
+    FW -.->|In-line / DPI Logs| SURICATA
     SPAN --> SURICATA
     SURICATA --> EVE_JSON
     EVE_JSON --> EVEBOX
@@ -76,7 +81,7 @@ sudo apt-get update && sudo apt-get install -y \
 ```
 
 ### 2.3 Create Port Forwarding to EVE-NG Guest
-Because EVE-NG sits on the internal NAT bridge (`192.168.122.91`), configure iptables PREROUTING rules on the hypervisor so that web, SSH, and node consoles are directly reachable from your workstation LAN:
+Because EVE-NG sits on the internal NAT bridge (`192.168.122.91`), configure iptables PREROUTING rules on the hypervisor so that web, SSH, EveBox, and node consoles are directly reachable from your workstation LAN:
 ```bash
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.122.91:80
 sudo iptables -t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to-destination 192.168.122.91:22
@@ -150,7 +155,7 @@ sudo chmod 755 /opt/unetlab/addons/dynamips/*
 ### 4.4 Kali Linux Red Team Appliance
 1. Create directory `/opt/unetlab/addons/qemu/linux-kali/`.
 2. Provision minimal Kali disk `virtioa.qcow2` pre-loaded with penetration testing tools (`nmap`, `hydra`, `scapy`, `tcpdump`, `socat`, `python3`).
-3. Default credentials: `kali` / `kali` (or `root` / `eve`).
+3. Default credentials: `kali` / `kali`.
 
 ### 4.5 Apply Permissions Wrapper
 Always run the EVE-NG permission wrapper after adding or modifying images:
@@ -173,7 +178,7 @@ After=network.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/bash -c "brctl addbr pnet0 2>/dev/null || true; brctl addbr pnet1 2>/dev/null || true; ip link set pnet0 up; ip link set pnet1 up; ip addr add 172.31.255.1/24 dev pnet1 2>/dev/null || true; iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE 2>/dev/null || true; systemctl restart dnsmasq"
+ExecStart=/bin/bash -c "brctl addbr pnet0 2>/dev/null || true; brctl addbr pnet1 2>/dev/null || true; ip link set pnet0 up; ip link set pnet1 up; ip addr add 172.31.255.1/24 dev pnet1 2>/dev/null || true; ip link set pnet0 promisc on; ip link set pnet1 promisc on; iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE 2>/dev/null || true; systemctl restart dnsmasq"
 
 [Install]
 WantedBy=multi-user.target
@@ -238,7 +243,7 @@ sudo /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
 
 ---
 
-## 8. Phase 7: SOC Telemetry Stack (Suricata & EveBox)
+## 8. Phase 7: SOC Telemetry Stack (Suricata 8.0.7 & EveBox)
 
 ### 8.1 Install Suricata 8.0.7 & Emerging Threats Rules
 ```bash
@@ -247,14 +252,31 @@ sudo apt-get update && sudo apt-get install -y suricata jq
 sudo suricata-update
 ```
 
-### 8.2 Install EveBox Event UI
+### 8.2 Configure AF_PACKET Promiscuous Sniffing (`/etc/suricata/suricata.yaml`)
+```yaml
+af-packet:
+  - interface: pnet1
+    threads: auto
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+  - interface: pnet0
+    threads: auto
+    cluster-id: 98
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+```
+
+### 8.3 Install EveBox Event Management UI
 ```bash
 sudo curl -fsSL -o /tmp/evebox.zip https://github.com/jasonish/evebox/releases/download/v0.18.2/evebox-linux-amd64.zip
 sudo unzip /tmp/evebox.zip -d /opt/evebox/
 sudo ln -sf /opt/evebox/evebox-linux-amd64/evebox /usr/local/bin/evebox
 ```
 
-### 8.3 Configure Systemd Unit (`/etc/systemd/system/evebox.service`)
+### 8.4 Configure Systemd Unit (`/etc/systemd/system/evebox.service`)
 ```ini
 [Unit]
 Description=EveBox Suricata Event Management UI
@@ -279,25 +301,25 @@ Access EveBox at `http://<HYPERVISOR_IP>:5636`.
 
 ## 9. Phase 8: Attack Simulation & Blue Team Verification
 
-From the **Kali Linux** node inside the lab, simulate adversary activity across the perimeter:
+From the **Kali Linux** node (`172.31.255.100`), simulate real adversary activity against the perimeter (`172.31.255.1`):
 
-### Test 1: Port Scan Reconnaissance
+### Test 1: Stealth Port Scan Reconnaissance
 ```bash
-nmap -sS -sV -p- -T4 10.10.10.1
+sudo nmap -sS -Pn -p 21,22,23,80,443,3306,3389,8080 172.31.255.1
 ```
-*Expected Telemetry:* Suricata triggers `ET SCAN Potential Nmap Scan` alerts in `/var/log/suricata/eve.json`.
+*Expected Telemetry:* Suricata triggers `SOC ALERT: Inbound Port Scan Detected` / `ET SCAN Potential Nmap Scan` in `/var/log/suricata/eve.json`.
 
-### Test 2: SSH Brute-Force Attack
+### Test 2: Web SQL Injection Attack
 ```bash
-hydra -l root -P /usr/share/wordlists/fasttrack.txt 10.10.10.1 ssh -t 4
+curl -A "sqlmap/1.4.7" -s "http://172.31.255.1/?id=1%20UNION%20SELECT%20username,password%20FROM%20users--"
 ```
-*Expected Telemetry:* Suricata registers `ET SCAN Suspicious inbound to SSH port 22` and SSH authentication anomaly events in EveBox.
+*Expected Telemetry:* Suricata registers `SOC ALERT: Web SQL Injection Union Select Pattern Detected` and `SOC ALERT: Security Scanner User-Agent Detected` (Severity 1).
 
-### Test 3: Web Directory Enumeration / SQL Injection
+### Test 3: Shellshock Remote Code Execution (CVE-2014-6271)
 ```bash
-curl -A "sqlmap/1.4" "http://10.10.20.10/login.php?id=1%27%20OR%201=1--"
+curl -s -X POST http://172.31.255.1/cgi-bin/test.sh -H "User-Agent: () { :;}; echo CVE-2014-6271"
 ```
-*Expected Telemetry:* Signature match on SQLi pattern with immediate EveBox alert and OPNsense block rule trigger.
+*Expected Telemetry:* Suricata triggers `ET WEB_SERVER Possible CVE-2014-6271 Attempt`.
 
 ---
 
