@@ -1,0 +1,19 @@
+# ==============================================================================
+# Suricata OT/ICS Detection Rules: Modbus TCP & Industrial Protocol Security
+# Category: SCADA / ICS Threat Detection & MITRE ATT&CK for ICS
+# ==============================================================================
+
+# 1. Detect Modbus TCP Port Scanning / Network Discovery (MITRE T0846)
+alert tcp any any -> 10.10.30.0/24 502 (msg:"SURICATA OT/ICS Modbus TCP Port Scan / Discovery to PLC Subnet"; flow:to_server; flags:S; threshold:type threshold, track by_src, count 3, seconds 30; classtype:attempted-recon; sid:2026101; rev:1;)
+
+# 2. Detect Modbus Read Function Codes (FC 01 / FC 02 / FC 03) from Untrusted Sources
+alert tcp !10.10.10.0/24 any -> 10.10.30.0/24 502 (msg:"SURICATA OT/ICS Modbus TCP Unauthorized Read Holding Registers Request (FC 03)"; flow:to_server,established; content:"|00 00|"; offset:2; depth:2; content:"|03|"; offset:7; depth:1; classtype:policy-violation; sid:2026102; rev:1;)
+
+# 3. Detect Modbus Unauthorized Write Single Coil (FC 05) - Potential Actuator Manipulation (MITRE T0855)
+alert tcp any any -> 10.10.30.0/24 502 (msg:"SURICATA OT/ICS Modbus TCP Critical Write Single Coil Command (FC 05)"; flow:to_server,established; content:"|00 00|"; offset:2; depth:2; content:"|05|"; offset:7; depth:1; classtype:attempted-admin; sid:2026103; rev:1;)
+
+# 4. Detect Modbus Unauthorized Write Single Register (FC 06) - Setpoint Tampering (MITRE T0836)
+alert tcp any any -> 10.10.30.0/24 502 (msg:"SURICATA OT/ICS Modbus TCP Setpoint Modification Write Register (FC 06)"; flow:to_server,established; content:"|00 00|"; offset:2; depth:2; content:"|06|"; offset:7; depth:1; classtype:attempted-admin; sid:2026104; rev:1;)
+
+# 5. Detect Modbus Write Multiple Registers (FC 16 / 0x10) - Mass Parameter Overwrite
+alert tcp any any -> 10.10.30.0/24 502 (msg:"SURICATA OT/ICS Modbus TCP Write Multiple Holding Registers (FC 16)"; flow:to_server,established; content:"|00 00|"; offset:2; depth:2; content:"|10|"; offset:7; depth:1; classtype:attempted-admin; sid:2026105; rev:1;)
