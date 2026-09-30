@@ -1,0 +1,51 @@
+==============================================================================
+SOC & OT/ICS DETECTION ARCHITECTURE & PACKET PATH PROOF GUIDE
+==============================================================================
+
+1. NETWORK TOPOLOGY & ZONES
+------------------------------------------------------------------------------
+- Zone 1 (External WAN): 172.31.255.0/24 (Kali Red Team: .100, Gateway: .1)
+- Zone 2 (Perimeter NGFW): OPNsense 24.7 (WAN: .50, LAN: 10.10.10.1, DMZ: 10.10.20.1, OT: 10.10.30.1)
+- Zone 3 (Core Switching): Cisco IOL L2 Switch (Trunk e0/0, DMZ e0/1, OT e0/2, SPAN e0/3)
+- Zone 4 (Corporate LAN): 10.10.10.0/24 (Workstation: 10.10.10.50, VLAN 10)
+- Zone 5 (DMZ Web): 10.10.20.0/24 (Web Server: 10.10.20.10:80, VLAN 20)
+- Zone 6 (Critical OT/ICS): 10.10.30.0/24 (Linux QEMU Modbus PLC: 10.10.30.50:502, VLAN 30)
+- Zone 7 (SOC Telemetry): Suricata 8.0.7 NIDS + EveBox SIEM (:5636) via SPAN e0/3
+
+2. PURDUE MODEL (PERA) MAPPING
+------------------------------------------------------------------------------
+- Level 5 (Enterprise/Cloud): External WAN (172.31.255.0/24)
+- Level 4 (Enterprise IT): Corporate LAN (10.10.10.0/24)
+- Level 3.5 (IDMZ): DMZ Web Zone (10.10.20.0/24)
+- Level 3 (Site Monitoring): SOC SPAN Mirror & Suricata NIDS
+- Level 1/2 (Supervisory / PLCs): OT Subnet (10.10.30.0/24, Modbus TCP port 502)
+
+3. STEP-BY-STEP PACKET PATH & INSPECTION LIFECYCLE
+------------------------------------------------------------------------------
+1. Kali (172.31.255.100) crafts Modbus TCP packet (Port 502, FC 0x06 Write Register 0 = 9999 psi).
+2. Packet arrives at OPNsense WAN interface (vtnet0).
+3. Firewall evaluates state table and routes to OT interface (vtnet3).
+4. Cisco Core Switch receives 802.1Q trunked frame on e0/0, forwards to VLAN 30 port e0/2.
+5. Cisco Core Switch hardware mirrors the entire bidirectional frame to SPAN port e0/3.
+6. Suricata 8.0.7 captures the frame via AF_PACKET ring buffer without impacting OT network.
+7. Suricata decodes MBAP header and triggers SID 2026104 ("Modbus Setpoint Modification").
+8. Alert JSON written to /var/log/suricata/eve.json in real time.
+9. EveBox SIEM dashboard (:5636) surfaces high-severity incident for analyst triage.
+10. Target PLC (10.10.30.50:502) receives packet and updates register state.
+
+4. MODBUS TCP PROTOCOL STRUCTURE (MBAP + PDU)
+------------------------------------------------------------------------------
+- MBAP Header (7 Bytes):
+  * Bytes 0-1: Transaction ID (0x0001 - 0xFFFF)
+  * Bytes 2-3: Protocol ID (0x0000 for Modbus TCP)
+  * Bytes 4-5: Length (Number of following bytes)
+  * Byte 6:    Unit ID (0x01)
+- PDU:
+  * Byte 7:    Function Code (FC 01: Read Coils, FC 03: Read Regs, FC 05: Write Coil, FC 06: Write Reg)
+  * Bytes 8+:  Data payload (Register address and value)
+
+5. VERIFIED LIVE TEST RESULTS
+------------------------------------------------------------------------------
+- Modbus PLC Daemon: Tested on Linux node; successfully listens on TCP/502 and logs register changes.
+- Exploit Injection: Tested automated FC 03 telemetry poll, FC 05 coil trip, and FC 06 setpoint overwrite.
+- Suricata NIDS Rule Validation: Loaded suricata_ot_rules.rules with zero errors (Suricata 8.0.7 RELEASE).

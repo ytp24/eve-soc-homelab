@@ -50,7 +50,7 @@ def handle_client(conn, addr):
                 resp_pdu.append(fc)
                 resp_pdu.append(byte_count)
                 resp_pdu.append(bits & 0xFF)
-                print(f"[*] [FC 01] Read Coils from {start_addr} (count={count}) -> bits={bin(bits)}")
+                print(f"[*] [FC 01] Read Coils from {start_addr} (count={count}) -> bits={bin(bits)}", flush=True)
                 
             elif fc == 3: # Read Holding Registers
                 start_addr, count = struct.unpack('>HH', pdu[1:5])
@@ -59,20 +59,20 @@ def handle_client(conn, addr):
                 for i in range(count):
                     val = STATE['holding_registers'].get(start_addr + i, 0)
                     resp_pdu.extend(struct.pack('>H', val))
-                print(f"[*] [FC 03] Read Holding Registers from {start_addr} (count={count})")
+                print(f"[*] [FC 03] Read Holding Registers from {start_addr} (count={count})", flush=True)
                 
             elif fc == 5: # Write Single Coil
                 coil_addr, coil_val = struct.unpack('>HH', pdu[1:5])
                 bool_val = (coil_val == 0xFF00)
                 STATE['coils'][coil_addr] = bool_val
                 resp_pdu.extend(pdu[0:5]) # Echo request
-                print(f"[!] [ALERT] [FC 05] Unauthorized Write Single Coil! Coil {coil_addr} set to {bool_val} by {addr[0]}")
+                print(f"[!] [ALERT] [FC 05] Unauthorized Write Single Coil! Coil {coil_addr} set to {bool_val} by {addr[0]}", flush=True)
                 
             elif fc == 6: # Write Single Register
                 reg_addr, reg_val = struct.unpack('>HH', pdu[1:5])
                 STATE['holding_registers'][reg_addr] = reg_val
                 resp_pdu.extend(pdu[0:5])
-                print(f"[!] [ALERT] [FC 06] Unauthorized Write Single Register! Reg {reg_addr} set to {reg_val} by {addr[0]}")
+                print(f"[!] [ALERT] [FC 06] Unauthorized Write Single Register! Reg {reg_addr} set to {reg_val} by {addr[0]}", flush=True)
                 
             elif fc == 16: # Write Multiple Registers
                 start_addr, reg_count, byte_count = struct.unpack('>HHB', pdu[1:6])
@@ -80,11 +80,11 @@ def handle_client(conn, addr):
                     val = struct.unpack('>H', pdu[6 + i*2:8 + i*2])[0]
                     STATE['holding_registers'][start_addr + i] = val
                 resp_pdu.extend(pdu[0:5])
-                print(f"[!] [ALERT] [FC 16] Unauthorized Write Multiple Registers! Regs {start_addr}..{start_addr+reg_count-1} modified by {addr[0]}")
+                print(f"[!] [ALERT] [FC 16] Unauthorized Write Multiple Registers! Regs {start_addr}..{start_addr+reg_count-1} modified by {addr[0]}", flush=True)
             else:
                 resp_pdu.append(fc | 0x80) # Exception
                 resp_pdu.append(0x01) # Illegal Function
-                print(f"[!] [FC {fc}] Unsupported or Illegal Modbus Function Code from {addr[0]}")
+                print(f"[!] [FC {fc}] Unsupported or Illegal Modbus Function Code from {addr[0]}", flush=True)
 
             resp_len = len(resp_pdu) + 1
             resp_header = struct.pack('>HHHB', trans_id, proto_id, resp_len, unit_id)
