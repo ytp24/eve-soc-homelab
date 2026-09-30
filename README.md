@@ -1,7 +1,7 @@
 # Enterprise SOC Detection & Perimeter Engineering Home Lab
 ### EVE-NG • OPNsense 24.7 • Cisco IOS/IOL • Suricata 8.0.7 • EveBox SIEM • Kali Linux
 
-A production-grade, fully automated **Security Operations Center (SOC) Detection & Perimeter Engineering Home Lab** virtualized inside EVE-NG on Linux KVM. Built for realistic adversary simulations, deep packet inspection (DPI), stateful firewalling, L2 switching security, and real-time SIEM alert triage.
+A production-grade, automated Security Operations Center (SOC) Detection & Perimeter Engineering Home Lab virtualized inside EVE-NG on Linux KVM. Built for realistic adversary simulations, deep packet inspection (DPI), stateful firewalling, L2 switching security, and real-time SIEM alert triage.
 
 [![Platform](https://img.shields.io/badge/Platform-EVE--NG%20Community%20%2F%20Pro-blue.svg)](https://www.eve-ng.net/)
 [![Hypervisor](https://img.shields.io/badge/Hypervisor-KVM%20%2F%20QEMU%20(Nested)-orange.svg)](https://www.linux-kvm.org/)
@@ -12,26 +12,26 @@ A production-grade, fully automated **Security Operations Center (SOC) Detection
 
 ---
 
-## 🗺️ Live Lab Topology & Zone Architecture
+## Live Lab Topology & Zone Architecture
 
 ![EVE-NG SOC Lab Topology](docs/images/eve-ng-soc-topology.png)
 
 ---
 
-## 🚀 Quick Navigation
+## Quick Navigation
 
-- 📖 **[Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)**
-- ⚔️ **[Adversary Simulation & Attack Catalog](docs/ATTACK_CATALOG.md)**
-- 📚 **[SOC & Networking Core Study Notes (Plain .txt)](study/)**
-- ⚙️ **[Node Configuration Files](configs/)**
-- ⚡ **[Ansible Automated Provisioning Playbooks](ansible/)**
-- 🛡️ **[Lab Topologies & UNL Definitions](topologies/)**
-- 📸 **[Snapshot & Disaster Recovery Scripts](snapshots/)**
-- 🔑 **[Client Integration & Access Guide](ACCESS_GUIDE.md)**
+- [Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)
+- [Adversary Simulation & Attack Catalog](docs/ATTACK_CATALOG.md)
+- [SOC & Networking Core Study Notes (Plain .txt)](study/)
+- [Node Configuration Files](configs/)
+- [Ansible Automated Provisioning Playbooks](ansible/)
+- [Lab Topologies & UNL Definitions](topologies/)
+- [Snapshot & Disaster Recovery Scripts](snapshots/)
+- [Client Integration & Access Guide](ACCESS_GUIDE.md)
 
 ---
 
-## 🎯 Architecture & Network Segmentation
+## Architecture & Network Segmentation
 
 The lab models a realistic enterprise perimeter with an isolated external threat actor attacking through the public Internet, a next-generation perimeter firewall, enterprise core switching, segmented internal enclaves, and an out-of-band SOC detection pipeline.
 
@@ -80,7 +80,7 @@ flowchart TD
 
 ---
 
-## 📊 Subnet & Addressing Plan
+## Subnet & Addressing Plan
 
 | Zone / Network | Subnet / CIDR | Gateway | Description |
 | :--- | :--- | :--- | :--- |
@@ -92,7 +92,7 @@ flowchart TD
 
 ---
 
-## 🛡️ Core Switching & VLAN Segmentation
+## Core Switching & VLAN Segmentation
 
 The Cisco Core Switch segments internal enterprise domains and provides SPAN port mirroring out to the Suricata inspection engine:
 
@@ -100,7 +100,7 @@ The Cisco Core Switch segments internal enterprise domains and provides SPAN por
 
 ---
 
-## ⚔️ Adversary Attack Simulation & Live Detection
+## Adversary Attack Simulation & Live Detection
 
 Adversary emulation is executed from the isolated Kali Red Team node (`172.31.255.100`) across the WAN perimeter:
 
@@ -112,7 +112,7 @@ Adversary emulation is executed from the isolated Kali Red Team node (`172.31.25
 
 ---
 
-## 📊 Real-Time SIEM Event Triage (EveBox)
+## Real-Time SIEM Event Triage (EveBox)
 
 Suricata 8.0.7 forwards all telemetry to the **EveBox SIEM Dashboard** (`:5636`) for threat hunting and incident triage:
 
@@ -124,7 +124,7 @@ Suricata 8.0.7 forwards all telemetry to the **EveBox SIEM Dashboard** (`:5636`)
 
 ---
 
-## 🔍 Deep Packet Inspection (Wireshark)
+## Deep Packet Inspection (Wireshark)
 
 Deep packet inspection (DPI) verifies protocol compliance, TCP handshake lifecycles, and byte-level payload signatures on the wire:
 
@@ -132,7 +132,7 @@ Deep packet inspection (DPI) verifies protocol compliance, TCP handshake lifecyc
 
 ---
 
-## 📚 Core Study Notes (`study/`)
+## Core Study Notes (`study/`)
 
 Direct, plain-text reference notes covering foundational concepts:
 - [`study/networking_fundamentals.txt`](study/networking_fundamentals.txt) - OSI model, IPv4 subnetting, RFC 1918, ARP, 802.1Q VLANs.
@@ -147,7 +147,7 @@ Direct, plain-text reference notes covering foundational concepts:
 
 ---
 
-## 🛠️ Quick Start
+## Quick Start
 
 ### 1. Check Lab & Hypervisor Status
 ```bash
@@ -183,5 +183,5 @@ telnet <HYPERVISOR_IP> 32772
 
 ---
 
-## 📄 License & Masked Infrastructure Notice
+## License & Masked Infrastructure Notice
 All configuration templates and playbooks in this repository use RFC 1918 placeholder addresses (`192.168.1.X`, `172.31.255.X`, `10.10.X.X`) to safeguard production credentials while ensuring 100% reproducible deployment.
