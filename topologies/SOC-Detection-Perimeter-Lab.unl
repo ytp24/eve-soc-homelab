@@ -1,41 +1,146 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<lab name="SOC-Detection-Perimeter-Lab" id="1ff35a5d-17c5-45d3-8a44-b1b5446d41e8" version="1" scripttimeout="300" lock="0">
+<lab name="SOC-Detection-Perimeter-Lab" id="11e3a144-5f7e-4089-a9b3-87572a2a5c30" version="1" scripttimeout="300" lock="0">
   <topology>
     <nodes>
-      <node id="1" name="OPNsense-FW" type="qemu" template="opnsense" image="opnsense-24.7" console="vnc" cpu="2" cpulimit="1" ram="2048" ethernet="4" uuid="39d9003e-f54b-425f-ba21-fc257915c2bb" qemu_options="-machine type=pc,accel=kvm -nographic -usbdevice tablet -boot order=dc -serial mon:stdio" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Firewall.png" config="0" left="480" top="200">
+      <node id="1" name="OPNsense-FW" type="qemu" template="opnsense" image="opnsense-24.7" console="vnc" cpu="2" cpulimit="1" ram="2048" ethernet="4" uuid="39d9003e-f54b-425f-ba21-fc257915c2bb" qemu_options="-machine type=pc,accel=kvm -nographic -usbdevice tablet -boot order=dc -serial mon:stdio" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Firewall.png" config="0" left="540" top="160">
         <interface id="0" name="vtnet0" type="ethernet" network_id="1"/>
         <interface id="1" name="vtnet1" type="ethernet" network_id="3"/>
         <interface id="2" name="vtnet2" type="ethernet" network_id="4"/>
         <interface id="3" name="vtnet3" type="ethernet" network_id="5"/>
       </node>
-      <node id="2" name="Cisco-L2-Switch" type="iol" template="iol" image="i86bi-linux-l2-adventerprise-15.1b.bin" ethernet="1" nvram="1024" ram="1024" serial="0" console="telnet" delay="0" icon="Switch.png" config="0" left="480" top="340">
+      <node id="2" name="Cisco-L2-Switch" type="iol" template="iol" image="i86bi-linux-l2-adventerprise-15.1b.bin" ethernet="1" nvram="1024" ram="1024" serial="0" console="telnet" delay="0" icon="Switch.png" config="1" left="740" top="380">
         <interface id="0" name="e0/0" type="ethernet" network_id="3"/>
         <interface id="16" name="e0/1" type="ethernet" network_id="4"/>
         <interface id="32" name="e0/2" type="ethernet" network_id="5"/>
         <interface id="48" name="e0/3" type="ethernet" network_id="2"/>
       </node>
-      <node id="3" name="Cisco-7200-Router" type="dynamips" template="c7200" image="c7200-adventerprisek9-mz.124-24.T5.image" idlepc="0x0" nvram="128" ram="512" console="telnet" delay="0" icon="Router.png" config="0" left="760" top="200">
+      <node id="3" name="Cisco-7200-Router" type="dynamips" template="c7200" image="c7200-adventerprisek9-mz.124-24.T5.image" idlepc="0x0" nvram="128" ram="512" console="telnet" delay="0" icon="Router.png" config="1" left="780" top="160">
         <interface id="0" name="fa0/0" type="ethernet" network_id="1"/>
       </node>
-      <node id="4" name="Kali-RedTeam" type="qemu" template="linux" image="linux-kali" console="telnet" cpu="1" cpulimit="1" ram="1024" ethernet="1" uuid="9f090c46-2e97-47ba-b8e7-dea1497d0bb1" firstmac="00:50:00:00:04:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Desktop.png" config="0" left="200" top="100">
+      <node id="4" name="Kali-RedTeam" type="qemu" template="linux" image="linux-kali" console="telnet" cpu="1" cpulimit="1" ram="1024" ethernet="1" uuid="9f090c46-2e97-47ba-b8e7-dea1497d0bb1" firstmac="00:50:00:00:04:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Desktop.png" config="0" left="150" top="160">
         <interface id="0" name="e0" type="ethernet" network_id="1"/>
       </node>
-      <node id="5" name="DMZ-Web-Server" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Server.png" config="0" left="480" top="480">
+      <node id="5" name="DMZ-Web-Server" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Server.png" config="1" left="640" top="570">
         <interface id="0" name="eth0" type="ethernet" network_id="4"/>
       </node>
-      <node id="6" name="Corp-Client-PC" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Router.png" config="0" left="220" top="480">
+      <node id="6" name="Corp-Client-PC" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Router.png" config="1" left="300" top="570">
         <interface id="0" name="eth0" type="ethernet" network_id="3"/>
       </node>
-      <node id="7" name="OT-PLC-Node" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Desktop2.png" config="0" left="740" top="480">
+      <node id="7" name="OT-PLC-Node" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Desktop2.png" config="1" left="970" top="570">
         <interface id="0" name="eth0" type="ethernet" network_id="5"/>
       </node>
     </nodes>
     <networks>
-      <network id="1" type="pnet1" name="Internet-Cloud-pnet1" left="480" top="60" visibility="1" icon="cloud.png"/>
-      <network id="2" type="pnet0" name="Local-Cloud-pnet0" left="760" top="60" visibility="1" icon="cloud.png"/>
-      <network id="3" type="bridge" name="Corp-LAN-VLAN10" left="220" top="340" visibility="1" icon="lan.png"/>
-      <network id="4" type="bridge" name="DMZ-VLAN20" left="480" top="410" visibility="1" icon="lan.png"/>
-      <network id="5" type="bridge" name="OT-ICS-VLAN30" left="740" top="340" visibility="1" icon="lan.png"/>
+      <network id="1" type="pnet1" name="Internet-Cloud-pnet1" left="320" top="160" visibility="1" icon="cloud.png"/>
+      <network id="2" type="pnet0" name="Local-Cloud-pnet0" left="990" top="160" visibility="1" icon="cloud.png"/>
+      <network id="3" type="bridge" name="Corp-LAN-VLAN10" left="160" top="570" visibility="1" icon="lan.png"/>
+      <network id="4" type="bridge" name="DMZ-VLAN20" left="510" top="570" visibility="1" icon="lan.png"/>
+      <network id="5" type="bridge" name="OT-ICS-VLAN30" left="840" top="570" visibility="1" icon="lan.png"/>
     </networks>
   </topology>
+  <objects>
+    <textobjects>
+      <textobject id="1" name="Header-Banner-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyMHB4OyBsZWZ0OiA4MHB4OyB3aWR0aDogMTA2MHB4OyBoZWlnaHQ6IDYwcHg7IHotaW5kZXg6IC0xOyI+PHN2ZyB3aWR0aD0iMTA2MCIgaGVpZ2h0PSI2MCI+PHJlY3Qgd2lkdGg9IjEwNjAiIGhlaWdodD0iNjAiIHN0cm9rZT0iIzAwNTZiMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjE1KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="2" name="Main-Header-Title" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyOHB4OyBsZWZ0OiAxMDBweDsgei1pbmRleDogMjA7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxNnB4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICMwZDZlZmQ7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+U09DIERFVEVDVElPTiAmYW1wOyBQRVJJTUVURVIgRU5HSU5FRVJJTkcgTEFCIHwgTElWRSBUSFJFQVQgU0lNVUxBVElPTjwvcD48L2Rpdj4=</data>
+      </textobject>
+      <textobject id="3" name="Main-Header-Subtitle" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1MnB4OyBsZWZ0OiAxMDBweDsgei1pbmRleDogMjA7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LXdlaWdodDogbm9ybWFsOyBjb2xvcjogIzZjNzU3ZDsgYmFja2dyb3VuZC1jb2xvcjogdHJhbnNwYXJlbnQ7Ij5TdXJpY2F0YSA4LjAuNyBOSURTIOKAoiBPUE5zZW5zZSAyNC43IE5HV0Yg4oCiIENpc2NvIDcyMDAgKyBJT0wgTDIgQ29yZSDigKIgS2FsaSBSZWQgVGVhbSDigKIgRXZlQm94IFNJRU08L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="4" name="Zone1-Attack-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiA5NXB4OyBsZWZ0OiA4MHB4OyB3aWR0aDogMzYwcHg7IGhlaWdodDogMjMwcHg7IHotaW5kZXg6IC0xMDsiPjxzdmcgd2lkdGg9IjM2MCIgaGVpZ2h0PSIyMzAiPjxyZWN0IHdpZHRoPSIzNjAiIGhlaWdodD0iMjMwIiBzdHJva2U9IiNkYzM1NDUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMCwwIiBmaWxsPSJyZ2JhKDIyMCwgNTMsIDY5LCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="5" name="Kali-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogMTI1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2RjMzU0NSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjIwLCA1MywgNjksIDAuMjApIi8+PC9zdmc+PC9kaXY+</data>
+      </textobject>
+      <textobject id="6" name="Zone1-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAxMDJweDsgbGVmdDogOTVweDsgei1pbmRleDogMTU7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxM3B4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICNmZmZmZmY7IGJhY2tncm91bmQtY29sb3I6ICNkYzM1NDU7Ij5FWFRFUk5BTCAvIEFUVEFDSyBaT05FIChXQU46IDE3Mi4zMS4yNTUuMC8yNCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="7" name="Kali-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogMTI1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZGMzNTQ1OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkthbGkgUmVkVGVhbSAoMTcyLjMxLjI1NS4xMDApPC9wPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="8" name="WAN-Cloud-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogMzA1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgY29sb3I6ICM2Yzc1N2Q7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+SW50ZXJuZXQgQ2xvdWQgKHBuZXQxIE5BVCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="9" name="Zone2-Perimeter-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiA5NXB4OyBsZWZ0OiA0NjBweDsgd2lkdGg6IDY4MHB4OyBoZWlnaHQ6IDIzMHB4OyB6LWluZGV4OiAtMTA7Ij48c3ZnIHdpZHRoPSI2ODAiIGhlaWdodD0iMjMwIj48cmVjdCB3aWR0aD0iNjgwIiBoZWlnaHQ9IjIzMCIgc3Ryb2tlPSIjMGQ2ZWZkIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjAsMCIgZmlsbD0icmdiYSgxMywgMTEwLCAyNTMsIDAuMDgpIi8+PC9zdmc+PC9kaXY+</data>
+      </textobject>
+      <textobject id="10" name="OPNsense-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogNTE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzBkNmVmZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="11" name="Cisco7200-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiAxMzVweDsgbGVmdDogNzU1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzBkNmVmZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTMsIDExMCwgMjUzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="12" name="Zone2-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAxMDJweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjMGQ2ZWZkOyI+UEVSSU1FVEVSIERFRkVOU0UgJmFtcDsgUk9VVElORyAoT1BOc2Vuc2UgTkdXRiArIENpc2NvIDcyMDApPC9wPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="13" name="OPNsense-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogNTA1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMGQ2ZWZkOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPk9QTnNlbnNlIDI0LjcgTkdXRiAoMTAuMTAuMTAuMSk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="14" name="Cisco7200-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogNzQ1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMGQ2ZWZkOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNpc2NvIDcyMDAgUm91dGVyIChPU1BGL0JHUCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="15" name="Local-Cloud-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAyNDBweDsgbGVmdDogOTY1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgY29sb3I6ICM2Yzc1N2Q7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyI+TG9jYWwgTEFOIEJyaWRnZSAocG5ldDApPC9wPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="16" name="Zone3-Core-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiAzNDBweDsgbGVmdDogNDYwcHg7IHdpZHRoOiA2ODBweDsgaGVpZ2h0OiAxNDBweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iNjgwIiBoZWlnaHQ9IjE0MCI+PHJlY3Qgd2lkdGg9IjY4MCIgaGVpZ2h0PSIxNDAiIHN0cm9rZT0iIzZmNDJjMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTExLCA2NiwgMTkzLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="17" name="Switch-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiAzNTVweDsgbGVmdDogNzE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzZmNDJjMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMTExLCA2NiwgMTkzLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="18" name="Zone3-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiAzNDdweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjNmY0MmMxOyI+Q09SRSBTV0lUQ0hJTkcgJmFtcDsgU1BBTiBURUxFTUVUUlkgKFZMQU4gMTAvMjAvMzAgKyBTUEFOKTwvcD48L2Rpdj4=</data>
+      </textobject>
+      <textobject id="19" name="Switch-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA0NTVweDsgbGVmdDogNzEwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjNmY0MmMxOyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNpc2NvIElPTCBMMiBTd2l0Y2ggKFNQQU4gTW9uaXRvcik8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="20" name="Zone4-LAN-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogODBweDsgd2lkdGg6IDM2MHB4OyBoZWlnaHQ6IDE5NXB4OyB6LWluZGV4OiAtMTA7Ij48c3ZnIHdpZHRoPSIzNjAiIGhlaWdodD0iMTk1Ij48cmVjdCB3aWR0aD0iMzYwIiBoZWlnaHQ9IjE5NSIgc3Ryb2tlPSIjMTk4NzU0IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjAsMCIgZmlsbD0icmdiYSgyNSwgMTM1LCA4NCwgMC4wOCkiLz48L3N2Zz48L2Rpdj4=</data>
+      </textobject>
+      <textobject id="21" name="Corp-PC-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogMjc1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iIzE5ODc1NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUsIDEzNSwgODQsIDAuMjApIi8+PC9zdmc+PC9kaXY+</data>
+      </textobject>
+      <textobject id="22" name="Zone4-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogOTVweDsgei1pbmRleDogMTU7Ij48cCBzdHlsZT0iZm9udC1zaXplOiAxM3B4OyBmb250LXdlaWdodDogYm9sZDsgY29sb3I6ICNmZmZmZmY7IGJhY2tncm91bmQtY29sb3I6ICMxOTg3NTQ7Ij5DT1JQT1JBVEUgTEFOIChWTEFOIDEwOiAxMC4xMC4xMC4wLzI0KTwvcD48L2Rpdj4=</data>
+      </textobject>
+      <textobject id="23" name="Corp-PC-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogMjcwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjMTk4NzU0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkNvcnAtQ2xpZW50LVBDICgxMC4xMC4xMC41MCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="24" name="Zone5-DMZ-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogNDYwcHg7IHdpZHRoOiAzMjVweDsgaGVpZ2h0OiAxOTVweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iMzI1IiBoZWlnaHQ9IjE5NSI+PHJlY3Qgd2lkdGg9IjMyNSIgaGVpZ2h0PSIxOTUiIHN0cm9rZT0iI2ZkN2UxNCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUzLCAxMjYsIDIwLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="25" name="DMZ-Web-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogNjE1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2ZkN2UxNCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjUzLCAxMjYsIDIwLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="26" name="Zone5-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogNDc1cHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjZmQ3ZTE0OyI+RE1aIFdFQiBTRVJWSUNFUyAoVkxBTiAyMDogMTAuMTAuMjAuMC8yNCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="27" name="DMZ-Web-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogNjEwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmQ3ZTE0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPkRNWi1XZWItU2VydmVyICgxMC4xMC4yMC41MCk8L3A+PC9kaXY+</data>
+      </textobject>
+      <textobject id="28" name="Zone6-OT-Card" type="square">
+        <data>PGRpdiBzdHlsZT0idG9wOiA0OTVweDsgbGVmdDogODA1cHg7IHdpZHRoOiAzMzVweDsgaGVpZ2h0OiAxOTVweDsgei1pbmRleDogLTEwOyI+PHN2ZyB3aWR0aD0iMzM1IiBoZWlnaHQ9IjE5NSI+PHJlY3Qgd2lkdGg9IjMzNSIgaGVpZ2h0PSIxOTUiIHN0cm9rZT0iI2Q2MzM4NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjE0LCA1MSwgMTMyLCAwLjA4KSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="29" name="OT-PLC-Sphere-Highlight" type="circle">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1NDVweDsgbGVmdDogOTQ1cHg7IHdpZHRoOiAxMTBweDsgaGVpZ2h0OiAxMTBweDsgei1pbmRleDogLTU7Ij48c3ZnIHdpZHRoPSIxMTAiIGhlaWdodD0iMTEwIj48ZWxsaXBzZSBjeD0iNTUiIGN5PSI1NSIgcng9IjUzIiByeT0iNTMiIHN0cm9rZT0iI2Q2MzM4NCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIwLDAiIGZpbGw9InJnYmEoMjE0LCA1MSwgMTMyLCAwLjIwKSIvPjwvc3ZnPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="30" name="Zone6-Header-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA1MDJweDsgbGVmdDogODIwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTNweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZmZmZmZmOyBiYWNrZ3JvdW5kLWNvbG9yOiAjZDYzMzg0OyI+Q1JJVElDQUwgT1QgLyBJQ1MgKFZMQU4gMzA6IDEwLjEwLjMwLjAvMjQpPC9wPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="31" name="OT-PLC-Node-Label" type="text">
+        <data>PGRpdiBzdHlsZT0idG9wOiA2NDVweDsgbGVmdDogOTQwcHg7IHotaW5kZXg6IDE1OyI+PHAgc3R5bGU9ImZvbnQtc2l6ZTogMTFweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjZDYzMzg0OyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsiPk9ULVBMQy1Ob2RlICgxMC4xMC4zMC41MCk8L3A+PC9kaXY+</data>
+      </textobject>
+    </textobjects>
+    <configs>
+      <config id="2">IQpob3N0bmFtZSBTT0MtQ29yZS1TVzEKIQpzcGFubmluZy10cmVlIG1vZGUgcmFwaWQtcHZzdAohCnZsYW4gMTAKIG5hbWUgQ29ycG9yYXRlLUxBTgohCnZsYW4gMjAKIG5hbWUgRE1aLVNlcnZpY2VzCiEKdmxhbiAzMAogbmFtZSBPVC1JQ1MtWm9uZQohCnZsYW4gOTkKIG5hbWUgU1BBTi1Nb25pdG9yaW5nCiEKaW50ZXJmYWNlIEV0aGVybmV0MC8wCiBkZXNjcmlwdGlvbiBUcnVuay10by1PUE5zZW5zZS1GaXJld2FsbAogc3dpdGNocG9ydCBtb2RlIHRydW5rCiBzd2l0Y2hwb3J0IHRydW5rIGFsbG93ZWQgdmxhbiAxMCwyMCwzMCw5OQogbm8gc2h1dGRvd24KIQppbnRlcmZhY2UgRXRoZXJuZXQwLzEKIGRlc2NyaXB0aW9uIERNWi1XZWItU2VydmVyLVBvcnQKIHN3aXRjaHBvcnQgbW9kZSBhY2Nlc3MKIHN3aXRjaHBvcnQgYWNjZXNzIHZsYW4gMjAKIHNwYW5uaW5nLXRyZWUgcG9ydGZhc3QKIG5vIHNodXRkb3duCiEKaW50ZXJmYWNlIEV0aGVybmV0MC8yCiBkZXNjcmlwdGlvbiBPVC1QTEMtTm9kZS1Qb3J0CiBzd2l0Y2hwb3J0IG1vZGUgYWNjZXNzCiBzd2l0Y2hwb3J0IGFjY2VzcyB2bGFuIDMwCiBzcGFubmluZy10cmVlIHBvcnRmYXN0CiBubyBzaHV0ZG93bgohCmludGVyZmFjZSBFdGhlcm5ldDAvMwogZGVzY3JpcHRpb24gU1BBTi1Nb25pdG9yLU91dHB1dC10by1TdXJpY2F0YQogc3dpdGNocG9ydCBtb2RlIGFjY2Vzcwogc3dpdGNocG9ydCBhY2Nlc3MgdmxhbiA5OQogbm8gc2h1dGRvd24KIQptb25pdG9yIHNlc3Npb24gMSBzb3VyY2UgaW50ZXJmYWNlIEV0aGVybmV0MC8wIGJvdGgKbW9uaXRvciBzZXNzaW9uIDEgc291cmNlIGludGVyZmFjZSBFdGhlcm5ldDAvMSBib3RoCm1vbml0b3Igc2Vzc2lvbiAxIHNvdXJjZSBpbnRlcmZhY2UgRXRoZXJuZXQwLzIgYm90aAptb25pdG9yIHNlc3Npb24gMSBkZXN0aW5hdGlvbiBpbnRlcmZhY2UgRXRoZXJuZXQwLzMKIQppbnRlcmZhY2UgVmxhbjEwCiBpcCBhZGRyZXNzIDEwLjEwLjEwLjIgMjU1LjI1NS4yNTUuMAogbm8gc2h1dGRvd24KIQppcCBkZWZhdWx0LWdhdGV3YXkgMTAuMTAuMTAuMQohCmxpbmUgY29uIDAKIGxvZ2dpbmcgc3luY2hyb25vdXMKIGV4ZWMtdGltZW91dCAwIDAKbGluZSB2dHkgMCA0CiBsb2dpbgohCmVuZAo=</config>
+      <config id="3">IQpob3N0bmFtZSBTT0MtQ29yZS1SMQohCmlwIGNlZgohCmludGVyZmFjZSBGYXN0RXRoZXJuZXQwLzAKIGRlc2NyaXB0aW9uIFdBTi1JbnRlcm5ldC1DbG91ZAogaXAgYWRkcmVzcyBkaGNwCiBubyBzaHV0ZG93bgohCmludGVyZmFjZSBGYXN0RXRoZXJuZXQwLzEKIGRlc2NyaXB0aW9uIENvcmUtSW50ZXJjb25uZWN0LXRvLU9QTnNlbnNlCiBpcCBhZGRyZXNzIDEwLjEwLjAuMSAyNTUuMjU1LjI1NS4yNTIKIG5vIHNodXRkb3duCiEKcm91dGVyIG9zcGYgMQogbG9nLWFkamFjZW5jeS1jaGFuZ2VzCiBuZXR3b3JrIDEwLjEwLjAuMCAwLjAuMC4zIGFyZWEgMAogbmV0d29yayAxMC4xMC4xMC4wIDAuMC4wLjI1NSBhcmVhIDAKIG5ldHdvcmsgMTAuMTAuMjAuMCAwLjAuMC4yNTUgYXJlYSAwCiEKaXAgcm91dGUgMC4wLjAuMCAwLjAuMC4wIDE3Mi4zMS4yNTUuMQohCmxvZ2dpbmcgdHJhcCBkZWJ1Z2dpbmcKbG9nZ2luZyBmYWNpbGl0eSBsb2NhbDcKIQpsaW5lIGNvbiAwCiBsb2dnaW5nIHN5bmNocm9ub3VzCiBleGVjLXRpbWVvdXQgMCAwCmxpbmUgdnR5IDAgNAogbG9naW4KIQplbmQK</config>
+      <config id="5">c2V0IHBjbmFtZSBETVotV2ViLVNydgppcCAxMC4xMC4yMC41MCAyNTUuMjU1LjI1NS4wIDEwLjEwLjIwLjEK</config>
+      <config id="6">c2V0IHBjbmFtZSBDb3JwLUNsaWVudC1QQwppcCAxMC4xMC4xMC41MCAyNTUuMjU1LjI1NS4wIDEwLjEwLjEwLjEK</config>
+      <config id="7">c2V0IHBjbmFtZSBPVC1QTEMtTm9kZQppcCAxMC4xMC4zMC41MCAyNTUuMjU1LjI1NS4wIDEwLjEwLjMwLjEK</config>
+    </configs>
+  </objects>
+  <objects/>
 </lab>
