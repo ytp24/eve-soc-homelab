@@ -28,7 +28,7 @@ flowchart TD
             subgraph Endpoints["Segmented Virtual Endpoints"]
                 DMZ_SRV["DMZ Web Server (VPCS / Linux)\n(10.10.20.10:80)"]
                 CORP_PC["Corporate Workstation (VPCS)\n(10.10.10.50)"]
-                OT_PLC["OT / ICS SCADA Node (VPCS)\n(10.10.30.100:502)"]
+                OT_PLC["OT / ICS SCADA Node (Linux QEMU)\n(10.10.30.50:502)"]
             end
 
             subgraph Telemetry["SOC Telemetry & Detection Pipeline"]

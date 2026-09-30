@@ -26,7 +26,7 @@
       <node id="6" name="Corp-Client-PC" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Router.png" config="1" left="300" top="570">
         <interface id="0" name="eth0" type="ethernet" network_id="3"/>
       </node>
-      <node id="7" name="OT-PLC-Node" type="vpcs" template="vpcs" image="" ethernet="1" delay="0" icon="Desktop2.png" config="1" left="970" top="570">
+      <node id="7" name="OT-PLC-Node" type="qemu" template="linux" image="linux-alpine" console="telnet" cpu="1" cpulimit="1" ram="512" ethernet="1" uuid="8a171d46-4444-47ba-b8e7-dea1497d0bb1" firstmac="00:50:00:00:07:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Server.png" config="0" left="970" top="570">
         <interface id="0" name="eth0" type="ethernet" network_id="5"/>
       </node>
     </nodes>
