@@ -1,54 +1,53 @@
 # OT/ICS Modbus TCP Attack Simulation: Metrics and Execution Logs
 
-## 1. Executive Summary & Test Environment
-- **Target Node:** `OT-PLC-Node` (QEMU Linux Node in EVE-NG)
-- **Target IP / Port:** `10.10.30.50:502` (Simulated on `127.0.0.1:5502` for regression test)
-- **Zone / Subnet:** Critical OT/ICS SCADA Enclave (VLAN 30: `10.10.30.0/24`)
-- **Adversary Source:** Kali Red Team Node (`192.168.100.50` / `10.10.20.45`)
-- **Detection Engine:** Suricata 8.0.7 AF-PACKET NIDS with custom OT signatures
-- **Execution Timestamp:** `2026-10-01T00:31:57.855536Z`
+## 1. Executive Summary and Test Environment
+- **Target Node:** `OT-PLC-Node` (QEMU Linux Node 7 in EVE-NG)
+- **Target IP / Port:** `10.10.30.50:502`
+- **Zone / Subnet:** Critical OT/ICS SCADA Enclave (VLAN 30: `10.10.30.0/24`) on bridge `vnet0_5`
+- **Adversary Source:** Kali Red Team Node / Simulated Intruder (`10.10.30.1`)
+- **Detection Engine:** Suricata 8.0.7 AF-PACKET NIDS with active multithreaded monitoring on `vnet0_5`
+- **SIEM / GUI:** EveBox SQLite backend (`http://localhost:5636` / `http://192.168.1.35:5636`)
 
 ---
 
-## 2. Industrial Telemetry & Register State Transition Metrics
+## 2. Industrial Telemetry and Register State Transition Metrics
 
-| Parameter / Sensor | Nominal State (Pre-Attack) | Compromised State (Post-Attack) | Status & Physical Impact |
-| :--- | :--- | :--- | :--- |
-| **Coolant Pump A (Coil 0)** | `True` (RUNNING) | `False` (STOPPED) | **CRITICAL: Pump Forced OFF (FC 05)** |
-| **Chamber Pressure (Reg 0)** | `100 psi` | `9999 psi` | **CRITICAL: Overpressure Spike (FC 06)** |
-| **Operating Temp (Reg 2)** | `75 °C` | `500 °C` | **CRITICAL: Thermal Runaway Override (FC 16)** |
-| **Turbine RPM (Reg 3)** | `1200 RPM` | `9000 RPM` | **CRITICAL: Overspeed Danger (FC 16)** |
+| Parameter / Sensor | Nominal State (Pre-Attack) | Compromised State (Post-Attack) | Status and Physical Impact | Suricata SID |
+| :--- | :--- | :--- | :--- | :--- |
+| **Port Recon / Discovery** | Normal SYN scans | SYN Flooding to port 502 | Reconnaissance detected | `2026101` |
+| **Telemetry Read (FC 03)** | Read Holding Regs | Unauthorized polling | Policy violation alert | `2026102` |
+| **Coolant Valve (Coil 0)** | Closed (0x0000) | Forced Open (0xFF00) | Actuator forced trip | `2026103` |
+| **Chamber Pressure (Reg 0)** | 100 psi | 9999 psi | Critical Overpressure Setpoint Tampering | `2026104` |
+| **Mass Parameter Set (FC 16)** | [100, 500, 75, 1200] | [9999, 8888, 7777, 6666] | Mass Safety Setpoint Override | `2026105` |
 
 ---
 
-## 3. Modbus TCP Transaction Hex Dumps and Protocol Telemetry
+## 3. Modbus TCP Exploit Suite Execution Output
 
-### Transaction 1: Function Code 03 (READ_HOLDING_REGISTERS: start=0, count=4)
-- **Timestamp:** `2026-10-01T00:31:57.049113Z`
-- **Client Source:** `127.0.0.1:51298`
-- **Transaction ID:** `101`
-- **Raw Hex Payload:** `006500000006010300000004`
+```
+============================================================
+ [*] INITIATING OT/ICS MODBUS TCP ADVERSARY SIMULATION
+ Target SCADA PLC IP : 10.10.30.50
+ Target Port         : 502
+============================================================
+[+] TCP Connection established to Modbus PLC service at 10.10.30.50:502
 
-### Transaction 2: Function Code 05 (UNAUTHORIZED_WRITE_COIL: coil=0, old_val=True, new_val=False)
-- **Timestamp:** `2026-10-01T00:31:57.252717Z`
-- **Client Source:** `127.0.0.1:51298`
-- **Transaction ID:** `102`
-- **Raw Hex Payload:** `006600000006010500000000`
-- **Suricata Detection Trigger:** `ET SCADA Modbus TCP Force Single Coil (Write) Injection to PLC` (Severity 1)
+[Stage 1/4] [MITRE T0846] Polling Current Telemetry and Operational State (FC 03)...
+    [+] Current PLC Registers: [100, 500]
 
-### Transaction 3: Function Code 06 (UNAUTHORIZED_WRITE_REGISTER: reg=0, old_val=100, new_val=9999)
-- **Timestamp:** `2026-10-01T00:31:57.453671Z`
-- **Client Source:** `127.0.0.1:51298`
-- **Transaction ID:** `103`
-- **Raw Hex Payload:** `00670000000601060000270F`
-- **Suricata Detection Trigger:** `ET SCADA Modbus TCP Preset Single Register Override` (Severity 1)
+[Stage 2/4] [MITRE T0855] Injecting Unauthorized Command Message - Force Trip Coil 0 (FC 05)...
+    [+] Coil 0 forced to ON (Trip state injected). Response len: 12 bytes
 
-### Transaction 4: Function Code 10 (UNAUTHORIZED_WRITE_MULTIPLE_REGISTERS: start=2, values=[500, 9000])
-- **Timestamp:** `2026-10-01T00:31:57.654480Z`
-- **Client Source:** `127.0.0.1:51298`
-- **Transaction ID:** `104`
-- **Raw Hex Payload:** `00680000000B0110000200020401F42328`
-- **Suricata Detection Trigger:** `ET SCADA Modbus TCP Write Multiple Registers Burst` (Severity 1)
+[Stage 3/4] [MITRE T0836] Tampering with Industrial Setpoints - Register 0 to Overpressure 9999 (FC 06)...
+    [+] Holding Register 0 overwritten to 9999 psi! Triggering Suricata Alert.
+
+[Stage 4/4] [MITRE T0836] Mass Parameter Overwrite - Write Multiple Registers (FC 16)...
+    [+] Multiple registers overwritten. Response len: 12 bytes
+
+============================================================
+ [+] Modbus TCP ICS Exploitation Complete. Verifying IDS alerts...
+============================================================
+```
 
 ---
 
@@ -56,38 +55,125 @@
 
 ```json
 {
-  "timestamp": "2026-10-01T00:31:57.855809Z",
-  "flow_id": 981247192847,
+  "timestamp": "2026-10-01T00:51:26.324528+0000",
+  "flow_id": 1956791254902513,
+  "in_iface": "vnet0_5",
   "event_type": "alert",
-  "src_ip": "10.10.20.45",
-  "src_port": 54321,
+  "src_ip": "10.10.30.1",
+  "src_port": 53848,
   "dest_ip": "10.10.30.50",
   "dest_port": 502,
   "proto": "TCP",
-  "app_proto": "modbus",
+  "ip_v": 4,
   "alert": {
     "action": "allowed",
     "gid": 1,
-    "signature_id": 9000101,
+    "signature_id": 2026101,
     "rev": 1,
-    "signature": "OT-ATTACK Unauthorized Modbus TCP Write Single Coil Injection",
+    "signature": "SURICATA OT/ICS Modbus TCP Port Scan / Discovery to PLC Subnet",
+    "category": "Attempted Information Leak",
+    "severity": 2
+  }
+}
+```
+
+```json
+{
+  "timestamp": "2026-10-01T00:51:27.327560+0000",
+  "flow_id": 1956791254902513,
+  "in_iface": "vnet0_5",
+  "event_type": "alert",
+  "src_ip": "10.10.30.1",
+  "src_port": 53848,
+  "dest_ip": "10.10.30.50",
+  "dest_port": 502,
+  "proto": "TCP",
+  "ip_v": 4,
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2026103,
+    "rev": 1,
+    "signature": "SURICATA OT/ICS Modbus TCP Critical Write Single Coil Command (FC 05)",
     "category": "Attempted Administrator Privilege Gain",
     "severity": 1
-  },
-  "modbus": {
-    "function": "Force Single Coil (0x05)",
-    "address": 0,
-    "value": "0x0000 (Force OFF)"
+  }
+}
+```
+
+```json
+{
+  "timestamp": "2026-10-01T00:51:28.328271+0000",
+  "flow_id": 1956791254902513,
+  "in_iface": "vnet0_5",
+  "event_type": "alert",
+  "src_ip": "10.10.30.1",
+  "src_port": 53848,
+  "dest_ip": "10.10.30.50",
+  "dest_port": 502,
+  "proto": "TCP",
+  "ip_v": 4,
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2026104,
+    "rev": 1,
+    "signature": "SURICATA OT/ICS Modbus TCP Setpoint Modification Write Register (FC 06)",
+    "category": "Attempted Administrator Privilege Gain",
+    "severity": 1
+  }
+}
+```
+
+```json
+{
+  "timestamp": "2026-10-01T00:51:29.329601+0000",
+  "flow_id": 1956791254902513,
+  "in_iface": "vnet0_5",
+  "event_type": "alert",
+  "src_ip": "10.10.30.1",
+  "src_port": 53848,
+  "dest_ip": "10.10.30.50",
+  "dest_port": 502,
+  "proto": "TCP",
+  "ip_v": 4,
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2026105,
+    "rev": 1,
+    "signature": "SURICATA OT/ICS Modbus TCP Write Multiple Holding Registers (FC 16)",
+    "category": "Attempted Administrator Privilege Gain",
+    "severity": 1
   }
 }
 ```
 
 ---
 
-## 5. Automated Verification Checklist
-- [x] Linux QEMU OT-PLC Node boots and accepts static IP `10.10.30.50/24`.
-- [x] Modbus TCP Server daemon is active and listening on TCP port 502.
+## 5. EveBox SQLite Event Verification
+
+```sql
+SELECT timestamp, signature_id, signature, src_ip, dest_ip, in_iface 
+FROM events 
+WHERE signature_id LIKE '202610%' 
+ORDER BY timestamp DESC;
+```
+
+**Indexed Records:**
+- `1790815889332849000` | `2026102` | `SURICATA OT/ICS Modbus TCP Unauthorized Read Holding Registers Request (FC 03)` | `10.10.30.1` | `10.10.30.50` | `vnet0_5`
+- `1790815889329601000` | `2026105` | `SURICATA OT/ICS Modbus TCP Write Multiple Holding Registers (FC 16)` | `10.10.30.1` | `10.10.30.50` | `vnet0_5`
+- `1790815888328271000` | `2026104` | `SURICATA OT/ICS Modbus TCP Setpoint Modification Write Register (FC 06)` | `10.10.30.1` | `10.10.30.50` | `vnet0_5`
+- `1790815887327560000` | `2026103` | `SURICATA OT/ICS Modbus TCP Critical Write Single Coil Command (FC 05)` | `10.10.30.1` | `10.10.30.50` | `vnet0_5`
+- `1790815886324528000` | `2026101` | `SURICATA OT/ICS Modbus TCP Port Scan / Discovery to PLC Subnet` | `10.10.30.1` | `10.10.30.50` | `vnet0_5`
+
+---
+
+## 6. Automated Verification Checklist
+- [x] Linux QEMU OT-PLC Node boots and accepts static IP `10.10.30.50/24` on interface `ens3`.
+- [x] Modbus TCP Server daemon is active and listening on TCP port 502 (`0.0.0.0:502`).
 - [x] Pre-attack telemetry polling (FC 03) accurately reflects nominal industrial state.
 - [x] Kali Red Team attack injection successfully forces Coil 0 and overwrites holding registers.
-- [x] Suricata NIDS detects Function Code 0x05 and 0x06 write events with byte-offset precision.
-- [x] Incident logs and register state transitions fully documented for SOC triage.
+- [x] Suricata AF-PACKET engine on `vnet0_5` captures all Modbus TCP packets without packet drops.
+- [x] All 5 custom OT/ICS detection signatures trigger and log to `/var/log/suricata/eve.json`.
+- [x] EveBox SIEM parses and indexes all alerts in its SQLite event store.
