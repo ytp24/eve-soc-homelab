@@ -82,3 +82,33 @@ To upload additional appliance images:
 - **`connect-eve-ssh.sh`**: One-click SSH into EVE-NG shell (`ssh eve`).
 - **`fix-permissions.sh`**: Triggers EVE-NG unl_wrapper permissions repair.
 - **`launch-filezilla.sh`**: Opens FileZilla pre-pointed to EVE-NG addons directory.
+
+---
+
+## 5. Direct Node Console Ports & Simulation Execution
+
+| Node ID | Node Name | Appliance Type | Telnet Console Port | IP Address | Subnet / Zone |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Node 1** | OPNsense-FW | QEMU FreeBSD | VNC :26869 / Web | 172.31.255.50 | WAN / Multi-Zone Gateway |
+| **Node 2** | Cisco-L2-Switch | Cisco IOL L2 | `telnet 192.168.1.35 32770` | 10.10.10.2 (Vlan10) | Core Switching |
+| **Node 3** | Cisco-7200-Router | Dynamips c7200 | `telnet 192.168.1.35 32771` | Dynamic | WAN Transit |
+| **Node 4** | Kali-RedTeam | QEMU Linux | `telnet 192.168.1.35 32772` | 192.168.1.100 | External Threat Actor |
+| **Node 5** | DMZ-Web-Server | VPCS Simulator | `telnet 192.168.1.35 32773` | 10.10.20.10 | DMZ Web (VLAN 20) |
+| **Node 6** | Corp-Client-PC | VPCS Simulator | `telnet 192.168.1.35 32774` | 10.10.10.50 | Corporate LAN (VLAN 10) |
+| **Node 7** | OT-PLC-Node | QEMU Linux | `telnet 192.168.1.35 32775` | 10.10.30.50 | OT / SCADA (VLAN 30) |
+
+### Running the OT Modbus Adversary Simulation
+
+To execute the automated 4-stage Modbus TCP attack simulation:
+```bash
+ssh -p 2222 root@192.168.1.35 "python3 /opt/unetlab/modbus_exploit_injector.py 10.10.30.50 502"
+```
+
+To view live Suricata alerts in real-time:
+```bash
+ssh -p 2222 root@192.168.1.35 "tail -f /var/log/suricata/fast.log"
+```
+
+To open EveBox SIEM dashboard:
+- Navigate to **[http://localhost:5636](http://localhost:5636)** (or `http://192.168.1.35:5636`).
+

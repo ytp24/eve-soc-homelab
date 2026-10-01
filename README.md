@@ -22,6 +22,7 @@ A production-grade, automated Security Operations Center (SOC) Detection & Perim
 
 - [Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)
 - [Enterprise Architecture Proof & End-to-End Walkthrough](docs/ARCHITECTURE_PROOF_GUIDE.md)
+- [Lab Changelog & Engineering Roadmap](docs/CHANGELOG_AND_ROADMAP.md)
 - [OT/ICS Attack Simulation Metrics & Forensic Logs](docs/ot-attack-simulation-metrics-and-logs.md)
 - [Adversary Simulation & Attack Catalog](docs/ATTACK_CATALOG.md)
 - [SOC & Networking Core Study Notes (Plain .txt)](study/)
@@ -56,7 +57,7 @@ flowchart TD
     subgraph Zones["Segmented Internal Enclaves"]
         DMZ["DMZ Web Server\n(10.10.20.10:80)"]
         CORP["Corporate Client PC\n(10.10.10.50)"]
-        OT["OT / ICS SCADA Node\n(10.10.30.100:502)"]
+        OT["OT / ICS SCADA Node\n(10.10.30.50:502)"]
     end
 
     subgraph Detection["SOC Telemetry & Detection Pipeline"]
@@ -89,7 +90,7 @@ flowchart TD
 | **External WAN** | `172.31.255.0/24` | `172.31.255.1` | Isolated untrusted network connecting Kali (`.100`) and Firewall WAN (`.50`) to the Internet |
 | **Corporate LAN (VLAN 10)** | `10.10.10.0/24` | `10.10.10.1` | Internal corporate workstations and domain assets (`10.10.10.50`) |
 | **DMZ Web (VLAN 20)** | `10.10.20.0/24` | `10.10.20.1` | Publicly exposed DMZ web servers & reverse proxies (`10.10.20.10:80`) |
-| **OT / ICS (VLAN 30)** | `10.10.30.0/24` | `10.10.30.1` | Critical Industrial Control Systems & Modbus PLCs (`10.10.30.100:502`) |
+| **OT / ICS (VLAN 30)** | `10.10.30.0/24` | `10.10.30.1` | Critical Industrial Control Systems & Modbus PLCs (`10.10.30.50:502`) |
 | **Management (VLAN 99)** | `10.10.99.0/24` | `10.10.99.1` | Out-of-band management and SPAN port mirror destination |
 
 ---
