@@ -56,26 +56,25 @@ This document provides a comprehensive log of architectural and configuration ch
 - [x] Node 7 (`OT-PLC-Node`) instantiated as Linux QEMU node with predictable network naming (`ens3`).
 - [x] Static IP `10.10.30.50/24` and gateway `10.10.30.1` reachable with 0% packet loss.
 - [x] Modbus TCP server daemon active on port 502 with full MBAP protocol support.
+- [x] Persistent Netplan configuration (`/etc/netplan/01-netcfg.yaml`) and Systemd service (`modbus-plc.service`) enabled on Node 7.
 - [x] Suricata 8.0.7 multithreaded AF-PACKET engine capturing live traffic on `vnet0_5`.
 - [x] All 5 custom OT detection rules validated and firing with high-fidelity alert categorization.
 - [x] EveBox SIEM dashboard actively indexing OT alert events.
-- [x] Attack simulation suite automated and committed to Git (`cf013e2`).
+- [x] Attack simulation suite automated and committed to Git.
+- [x] Formal SOC Incident Report `INC-2026-0941` completed and published in documentation.
 
 ---
 
 ## 3. Engineering Roadmap: What Needs To Be Done
 
-### Phase 1: OT Node Persistence & Hardening
-- [ ] **Systemd Unit File for Modbus Server:** Create `/etc/systemd/system/modbus-plc.service` on Node 7 with `Restart=always` so the PLC daemon persists across lab reboots and wipes.
-- [ ] **Static Netplan Configuration:** Configure `/etc/netplan/01-netcfg.yaml` inside the base QEMU disk image to persist `10.10.30.50/24` IP assignment permanently.
-
-### Phase 2: Perimeter Firewall & Inter-VLAN Policy Enforcement
+### Phase 1: Perimeter Firewall & Inter-VLAN Policy Enforcement
 - [ ] **OPNsense Firewall Rule Strict Isolation:** Configure strict OPNsense firewall rules blocking all direct inbound traffic from External WAN (`pnet1`) and DMZ (`VLAN 20`) to OT VLAN 30, permitting Modbus TCP (port 502) exclusively from designated Engineering Workstations (`10.10.10.50`).
 - [ ] **Firewall Log Forwarding (Syslog):** Configure OPNsense syslog forwarding to the SOC telemetry pipeline (port 514/UDP) for cross-correlation with Suricata IDS alerts.
 
-### Phase 3: Host-Level Security & Endpoint Detection (EDR/SIEM)
+### Phase 2: Host-Level Security & Endpoint Detection (EDR/SIEM)
 - [ ] **Wazuh Agent Integration:** Install Wazuh / OSSEC agent on the Linux OT-PLC node to monitor file integrity (`/root/plc_daemon.py`), process execution anomalies, and audit log generation.
 - [ ] **Zeek (Bro) Protocol Parsing:** Deploy Zeek on the SPAN/mirror tap to generate specialized `modbus.log` protocol transaction logs detailing register addresses and function code metadata alongside Suricata alert data.
 
-### Phase 4: Incident Response Documentation
-- [ ] **Formal Incident Report Write-Up:** Author SOC Incident Report `INC-2026-0941` detailing the unauthorized Modbus setpoint manipulation attack, timeline, containment steps, and firewall remediation rules.
+### Phase 3: Automated Response & Active Containment
+- [ ] **Suricata Inline IPS Mode:** Test and benchmark Suricata in inline IPS mode (`af-packet` IPS mode or `NFQUEUE`) to actively reject unauthorized Modbus Function Code write packets before they reach the PLC.
+
