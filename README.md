@@ -20,8 +20,11 @@ A production-grade, automated Security Operations Center (SOC) Detection & Perim
 
 ## Quick Navigation
 
+- [10-Minute Technical Interview Walkthrough & Defense Script](docs/TEN_MINUTE_WALKTHROUGH.md)
+- [1-Click End-to-End Reproduction Script](scripts/reproduce_all.sh)
 - [Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)
 - [Enterprise Architecture Proof & End-to-End Walkthrough](docs/ARCHITECTURE_PROOF_GUIDE.md)
+- [Formal SOC Incident Report: INC-2026-0941](docs/INC-2026-0941-ot-modbus-setpoint-tampering-report.md)
 - [Lab Changelog & Engineering Roadmap](docs/CHANGELOG_AND_ROADMAP.md)
 - [OT/ICS Attack Simulation Metrics & Forensic Logs](docs/ot-attack-simulation-metrics-and-logs.md)
 - [Adversary Simulation & Attack Catalog](docs/ATTACK_CATALOG.md)
