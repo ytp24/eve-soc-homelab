@@ -21,6 +21,8 @@ A production-grade, automated Security Operations Center (SOC) Detection & Perim
 ## Quick Navigation
 
 - [Full Step-by-Step Live Deployment Tutorial](docs/TUTORIAL.md)
+- [Enterprise Architecture Proof & End-to-End Walkthrough](docs/ARCHITECTURE_PROOF_GUIDE.md)
+- [OT/ICS Attack Simulation Metrics & Forensic Logs](docs/ot-attack-simulation-metrics-and-logs.md)
 - [Adversary Simulation & Attack Catalog](docs/ATTACK_CATALOG.md)
 - [SOC & Networking Core Study Notes (Plain .txt)](study/)
 - [Node Configuration Files](configs/)
